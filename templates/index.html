@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulated Sportsbook</title>
+</head>
+<body>
+<div style="text-align: center">
+    <h2>Sam's Simulated Sportsbook</h2>
+    <h4>NFL and NBA lines.</h4>
+    {% for event in events %}
+        <h4>{{ event }}</h4>
+        <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }}</h5>
+        <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
+        <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
+        <hr>
+    {% endfor %}
+</div>
+
+</body>
+</html>
