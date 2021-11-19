@@ -6,7 +6,7 @@ from simulated_sportsbook.services.odds_api_service import OpenApiService
 
 
 def index(request):
-    events = Event.objects.all()
+    events = Event.objects.all().order_by('start_time')
     return render(request, 'index.html', context={'events': events})
 
 

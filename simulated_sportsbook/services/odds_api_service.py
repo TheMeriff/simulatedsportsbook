@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import requests
@@ -39,6 +40,7 @@ class OpenApiService:
 
     def create_event(self, event, sport):
         money_line = None
+        external_sportsbook = None
         spread_home_team_price = None
         spread_home_team_points = None
         spread_away_team_points = None
@@ -55,15 +57,21 @@ class OpenApiService:
         bookmakers = event['bookmakers']
         for book in bookmakers:
             if book['key'] == 'fanduel':
+                external_sportsbook = book['title']
                 external_book_data = book
             elif book['key'] == 'draftkings':
+                external_sportsbook = book['title']
                 external_book_data = book
             elif book['key'] == 'unibet':
+                external_sportsbook = book['title']
                 external_book_data = book
             elif book['key'] == 'foxbet':
+                external_sportsbook = book['title']
                 external_book_data = book
             elif book['key'] == 'barstool':
+                external_sportsbook = book['title']
                 external_book_data = book
+
         if external_book_data:
             markets = external_book_data['markets']
         if markets:
@@ -102,6 +110,7 @@ class OpenApiService:
             away_team_money_line_price=away_team_money_line_price,
             home_team_money_line_price=home_team_money_line_price,
             last_updated=external_book_data['last_update'] if external_book_data else None,
+            external_sportsbook=external_sportsbook
         )
         print(f'{event.sport.upper()} Event {event.external_id} was added to database')
 

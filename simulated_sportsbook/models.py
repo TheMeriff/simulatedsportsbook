@@ -22,6 +22,7 @@ class Event(models.Model):
     away_team_money_line_price = models.IntegerField(blank=True, null=True)
     home_team_money_line_price = models.IntegerField(blank=True, null=True)
     last_updated = models.DateTimeField(null=True, blank=True)
+    external_sportsbook = models.CharField(max_length=75, null=True, blank=True)
 
     def __str__(self):
         return f'{self.sport.upper()} | {self.home_team} | {self.away_team}'
