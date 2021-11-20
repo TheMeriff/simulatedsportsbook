@@ -1,6 +1,8 @@
 from django.core.management import BaseCommand, call_command
 import django.contrib.auth
 
+from users.models import Account
+
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
@@ -15,5 +17,9 @@ class Command(BaseCommand):
             is_staff=True,
             is_superuser=True
         )
+        account = Account.objects.create(
+            user=user,
+        )
         user.save()
+        account.save()
         print(f'{user.username}s user account was created')

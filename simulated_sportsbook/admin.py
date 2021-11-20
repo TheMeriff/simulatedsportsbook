@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from simulated_sportsbook.models import Event
+from users.models import Account, AccountAdjustments
 
 
 @admin.register(Event)
@@ -20,3 +21,24 @@ class EventAdmin(admin.ModelAdmin):
     search_fields = ['home_team', 'away_team']
     filter_horizontal = ()
     fieldsets = ()
+
+
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    fields = ['user', 'current_balance', 'starting_balance']
+    readonly_fields = ['user', 'current_balance']
+    list_display = ['id', 'user', 'current_balance']
+    list_filter = ['user', 'current_balance']
+    ordering = []
+    search_fields = ['user', 'current_balance']
+    fieldsets = []
+
+@admin.register(AccountAdjustments)
+class AccountAdjustmentsAdmin(admin.ModelAdmin):
+    fields = ['user_account', 'previous_balance', 'new_balance', 'amount_adjusted', 'notes']
+    readonly_fields = ['user_account', 'previous_balance', 'new_balance', 'amount_adjusted']
+    list_filter = []
+    ordering = []
+    search_fields = ['user_account']
+    fieldsets = []
+

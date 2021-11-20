@@ -30,6 +30,11 @@
 <body style="background-color: #202124; color: white">
 <div style="text-align: center">
     <h2>Sam's Simulated Sportsbook</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <h2>{{ message }}</h2>
+            {% endfor %}
+        {% endif %}
     <h4>NFL, NBA, and MMA lines.</h4>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
         <div class="collapse-content" style="text-align: center">
