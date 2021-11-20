@@ -20,7 +20,6 @@ from simulated_sportsbook import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('nfl/', views.nfl_odds, name='nba_odds'),
-    path('nba/', views.nba_odds, name='nfl_odds'),
+    path('refresh_odds/', views.refresh_odds, name='refresh_odds'),
     path('admin/', admin.site.urls),
 ]

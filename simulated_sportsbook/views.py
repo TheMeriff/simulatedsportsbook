@@ -6,15 +6,31 @@ from simulated_sportsbook.services.odds_api_service import OpenApiService
 
 
 def index(request):
-    events = Event.objects.all().order_by('start_time')
-    return render(request, 'index.html', context={'events': events})
+    nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time')
+    nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time')
+
+    context = {
+        'nba_events': nba_events,
+        'nfl_events': nfl_events
+    }
+
+    return render(request, 'index.html', context=context)
 
 
-def nfl_odds(request):
-    event = OpenApiService().get_nfl_odds()
-    return HttpResponse('Update Successful')
+def refresh_odds(request):
+    context = {}
+    nba_events = None
+    nfl_events = None
+    if request.method == 'POST':
+        try:
+            nba_refresh = request.POST.get('nba_refresh')
+            nfl_refresh = request.POST.get('nfl_refresh')
+            if nba_refresh == 'on':
+                nba_events = OpenApiService().get_nba_odds()
+            if nfl_refresh == 'on':
+                nfl_events = OpenApiService().get_nfl_odds()
+            context = {'nba_events': nba_events, 'nfl_events': nfl_events}
+        except Exception as e:
+            return HttpResponse(e)
 
-
-def nba_odds(request):
-    event = OpenApiService().get_nba_odds()
-    return HttpResponse('Update Successful')
+    return render(request, 'refresh_odds.html', context=context)

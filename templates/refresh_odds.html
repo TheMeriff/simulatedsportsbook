@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Refresh Odds</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
+</head>
+<body>
+    <div style="text-align: center;">
+        {% if nba_events %}
+        <h2>The following NBA Events were imported</h2>
+        {% for event in nba_events %}
+            <p>{{ event }}</p>
+        {% endfor %}
+        <br>
+        <br>
+    {% endif %}
+    {% if nfl_events %}
+        <h2>The following NFL Events were imported</h2>
+        {% for event in nfl_events %}
+            <p>{{ event }}</p>
+        {% endfor %}
+        <br>
+        <br>
+    {% endif %}
+    </div>
+
+    <form style="text-align: center" method="post" enctype="multipart/form-data" id="refresh_lines" name="refresh_lines">
+        {% csrf_token %}
+        <div class="checkbox">
+            <label for="nba_refresh">Refresh NBA Lines</label>
+            <input type="checkbox" name="nba_refresh" id="nba_refresh" value="on">
+        </div>
+        <br>
+        <br>
+        <div class="checkbox">
+            <label for="nfl_refresh">Refresh NFL Lines</label>
+            <input type="checkbox" name="nfl_refresh" id="nfl_refresh" value="on">
+        </div>
+        <br>
+        <br>
+        <button type="submit" id="submit_form" class="ui blue basic button">Refresh Lines</button>
+    </form>
+</body>
+</html>

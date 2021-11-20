@@ -3,19 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <title>Simulated Sportsbook</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
+    <style>
+        .collapse {
+        background-color: black;
+        color: white;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+    }
+        .collapse-content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
+    }
+    </style>
 </head>
-<body>
+<body style="background-color: #202124; color: white">
 <div style="text-align: center">
     <h2>Sam's Simulated Sportsbook</h2>
     <h4>NFL and NBA lines.</h4>
-    {% for event in events %}
-        <h4>{{ event }}</h4>
-        <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }}</h5>
-        <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-        <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-        <hr>
+    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
+        <div class="collapse-content" style="text-align: center">
+        {% for event in nba_events %}
+        <div class="ui message">
+            <h4>{{ event }}</h4>
+            <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }} at {{ event.start_time.hour }}:{{ event.start_time.minute }}</h5>
+            <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
+            <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
+            <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+        </div>
     {% endfor %}
+    </div>
+    <br>
+    <hr>
+    <br>
+    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
+        <div class="collapse-content" style="text-align: center">
+        {% for event in nfl_events %}
+        <div class="ui message">
+            <h4>{{ event }}</h4>
+            <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }} at {{ event.start_time.hour }}:{{ event.start_time.minute }}</h5>
+            <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
+            <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
+            <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+        </div>
+    {% endfor %}
+    </div>
+
+
 </div>
 
 </body>
+<script>
+{# show/hide warehouse nested rows #}
+    let coll = document.getElementsByClassName("collapse");
+    for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            console.log(this)
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
 </html>
