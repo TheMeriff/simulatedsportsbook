@@ -29,4 +29,5 @@ class Event(models.Model):
     external_sportsbook = models.CharField(max_length=75, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.sport.upper()} | {self.home_team} | {self.away_team}'
+        return f'{self.home_team} | {self.away_team} | {self.start_time.month}/{self.start_time.day}/{self.start_time.year} @ ' \
+               f'{self.start_time.hour}: {self.start_time.minute}'
