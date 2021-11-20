@@ -47,16 +47,30 @@
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
-        {% for event in nfl_events %}
-        <div class="ui message">
-            <h4>{{ event }}</h4>
-            <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }} at {{ event.start_time.hour }}:{{ event.start_time.minute }}</h5>
-            <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-            <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-            <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+            {% for event in nfl_events %}
+            <div class="ui message">
+                <h4>{{ event }}</h4>
+                <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }} at {{ event.start_time.hour }}:{{ event.start_time.minute }}</h5>
+                <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
+                <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
+                <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
-    </div>
+    <br>
+    <hr>
+    <br>
+    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>
+        <div class="collapse-content" style="text-align: center">
+            {% for event in mma_events %}
+            <div class="ui message">
+                <h4>{{ event }}</h4>
+                <h5>{{ event.start_time.month }}/{{ event.start_time.day }}/{{ event.start_time.year }} at {{ event.start_time.hour }}:{{ event.start_time.minute }}</h5>
+                <p>{{ event.home_team}} | Money Line: {{ event.home_team_money_line_price }}</p>
+                <p>{{ event.away_team}} | Money Line: {{ event.away_team_money_line_price }}</p>
+            </div>
+        {% endfor %}
+        </div>
 
 
 </div>

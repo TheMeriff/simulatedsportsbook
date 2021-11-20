@@ -49,6 +49,24 @@ class OpenApiService:
         else:
             print(f"{r.status_code} | {r.reason}")
 
+    def get_mma_odds(self):
+        mma_events = []
+        url = 'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey=ead60e7fddf8d0aa97a31bfdee54b5c1&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        r = requests.get(url)
+
+        if r.status_code == 200:
+            print('Remaining requests', r.headers['x-requests-remaining'])
+            print('Used requests', r.headers['x-requests-used'])
+            event_records = r.json()
+            for event in event_records:
+                external_event_id = event['id']
+                if external_event_id not in self.existing_event_map:
+                    game = self.create_event(event, sport=Event.MMA)
+                    mma_events.append(game)
+            return mma_events
+        else:
+            print(f"{r.status_code} | {r.reason}")
+
     def create_event(self, event, sport):
         money_line = None
         over_under = None

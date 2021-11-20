@@ -4,10 +4,12 @@ from django.db import models
 class Event(models.Model):
     NBA = 'nba'
     NFL = 'nfl'
+    MMA = 'mma'
 
     SPORTS = [
         (NBA, 'NBA'),
         (NFL, 'NFL'),
+        (MMA, 'MMA'),
     ]
     external_id = models.CharField(max_length=100, null=True, blank=True)
     sport = models.CharField(choices=SPORTS, max_length=20, null=False, blank=False)
