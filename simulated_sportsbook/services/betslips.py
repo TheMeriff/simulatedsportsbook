@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from simulated_sportsbook.models import Betslip
 from users.models import AccountAdjustments
 
@@ -5,6 +7,42 @@ from users.models import AccountAdjustments
 class BetslipsService:
     def __init__(self):
         pass
+
+    def create_betslip(self, data):
+        user_account = data['account']
+        starting_balance = user_account.current_balance
+        print(f'{user_account.user.username} account value before deducting wager | {user_account.current_balance}')
+        stake = data['stake']
+        stake = Decimal(stake)
+        adjusted_stake = -abs(stake)
+        user_account.current_balance -= Decimal(stake)
+        user_account.save()
+        print(f'{user_account.user.username} account value after deducting wager | {user_account.current_balance}')
+        account_adjustment = AccountAdjustments.objects.create(
+            user_account=user_account,
+            previous_balance=int(starting_balance),
+            new_balance=user_account.current_balance,
+            amount_adjusted=adjusted_stake,
+            notes=f'Bet placed on {data["event"]} for {stake} dollars.'
+        )
+
+        type_of_bet = data['type_of_bet']
+        formatted_bet_type = None
+        if type_of_bet == 'money line':
+            formatted_bet_type = Betslip.MONEY_LINE
+        elif type_of_bet == 'spread':
+            formatted_bet_type = Betslip.SPREAD
+        elif type_of_bet == 'over_under':
+            formatted_bet_type = Betslip.OVER_UNDER
+        betslip = Betslip.objects.create(
+            user_account=user_account,
+            event=data['event'],
+            type_of_bet=formatted_bet_type,
+            predicted_outcome=data['predicted_outcome'],
+            stake=stake,
+        )
+        print('Betslip successfully created!')
+        return betslip
 
     def process_betslip(self, betslip):
         matched_prediction = None
@@ -42,6 +80,10 @@ class BetslipsService:
                 matched_money_line_price = event.away_team_money_line_price
                 matched_spread_points = event.spread_away_team_points
                 matched_spread_price = event.spread_away_team_price
+            elif betslip.predicted_outcome == 'Over':
+                matched_prediction = 'over'
+            elif betslip.predicted_outcome == 'Under':
+                matched_prediction = 'under'
 
             if matched_prediction:
                 if type_of_bet == Betslip.MONEY_LINE:
@@ -113,7 +155,7 @@ class BetslipsService:
                         betslip.save()
 
                 elif betslip.type_of_bet == Betslip.OVER_UNDER:
-                    if betslip.predicted_outcome == 'over':
+                    if betslip.predicted_outcome == 'Over':
                         game_over_under = event.over_under_points
                         game_total_points = event.home_team_points_scored + event.away_team_points_scored
                         if game_total_points > game_over_under:
@@ -143,7 +185,7 @@ class BetslipsService:
                             print('Better luck next time.')
                             betslip.processed_ticket = True
                             betslip.save()
-                    elif betslip.predicted_outcome == 'under':
+                    elif betslip.predicted_outcome == 'Under':
                         game_over_under = event.over_under_points
                         game_total_points = event.home_team_points_scored + event.away_team_points_scored
                         if game_total_points < game_over_under:

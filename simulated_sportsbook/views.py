@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -9,21 +10,40 @@ from users.models import Account, AccountAdjustments
 
 
 def index(request):
-    if request.user.is_anonymous:
-        return redirect("/login/")
-    username = request.user.username
-    nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True)
-    nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True)
-    mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True)
+    if request.method == 'POST':
+        try:
+            events = Event.objects.all()
+            for event in events:
+                if request.POST.get(event.external_id):
+                    data = {}
+                    user_account = Account.objects.get(user=request.user)
+                    data['account'] = user_account
+                    data['event'] = event
+                    data['type_of_bet'] = request.POST.get(event.external_id)
+                    data['predicted_outcome'] = request.POST.get(f'{event.external_id} | predicted_outcome')
+                    data['stake'] = request.POST.get(f'{event.external_id} | amount_wagered')
+                    BetslipsService().create_betslip(data)
+                    messages.success(request, f'Betslip Created Successfully!')
+                    return redirect('index')
 
-    context = {
-        'nba_events': nba_events,
-        'nfl_events': nfl_events,
-        'mma_events': mma_events,
-        'username': username,
-    }
+        except Exception as e:
+            render(request, e)
+    else:
+        if request.user.is_anonymous:
+            return redirect("/login/")
+        username = request.user.username
+        nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time')
+        nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time')
+        mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time')
 
-    return render(request, 'index.html', context=context)
+        context = {
+            'nba_events': nba_events,
+            'nfl_events': nfl_events,
+            'mma_events': mma_events,
+            'username': username,
+        }
+
+        return render(request, 'index.html', context=context)
 
 
 def refresh_odds(request):

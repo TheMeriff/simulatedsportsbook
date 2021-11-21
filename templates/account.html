@@ -6,8 +6,9 @@
 </head>
 <body>
     <h2>{{ username }}'s Account Info</h2>
-    <h4>Starting Balance: {{ account.starting_balance }}</h4>
-    <h4>Current Balance: {{ account.current_balance }}</h4>
+    <h3>Starting Balance: {{ account.starting_balance }}</h3>
+    <h3>Current Balance: {{ account.current_balance }}</h3>
+    <p>-------------------------------------------------</p>
     {% for adjustment in adjustments %}
         <h5>Previous Balance: {{ adjustment.previous_balance }}</h5>
         <h5>Amount Adjusted: {{ adjustment.amount_adjusted }}</h5>
