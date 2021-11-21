@@ -1,4 +1,5 @@
 from simulated_sportsbook.models import Betslip
+from users.models import AccountAdjustments
 
 
 class BetslipsService:
@@ -56,6 +57,13 @@ class BetslipsService:
                         betslip.total_return = total_return
                         betslip.processed_ticket = True
                         betslip.winning_ticket = True
+                        AccountAdjustments.objects.create(
+                            user_account=account,
+                            previous_balance=account.current_balance,
+                            amount_adjusted=total_return,
+                            new_balance=account.current_balance + total_return,
+                            notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                        )
                         account.current_balance += total_return
                         betslip.save()
                         account.save()
@@ -88,6 +96,14 @@ class BetslipsService:
                         betslip.total_return = total_return
                         betslip.processed_ticket = True
                         betslip.winning_ticket = True
+
+                        AccountAdjustments.objects.create(
+                            user_account=account,
+                            previous_balance=account.current_balance,
+                            amount_adjusted=total_return,
+                            new_balance=account.current_balance + total_return,
+                            notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                        )
                         account.current_balance += total_return
                         betslip.save()
                         account.save()
@@ -95,3 +111,65 @@ class BetslipsService:
                         betslip.processed_ticket = True
                         betslip.winning_ticket = False
                         betslip.save()
+
+                elif betslip.type_of_bet == Betslip.OVER_UNDER:
+                    if betslip.predicted_outcome == 'over':
+                        game_over_under = event.over_under_points
+                        game_total_points = event.home_team_points_scored + event.away_team_points_scored
+                        if game_total_points > game_over_under:
+                            print('We have a winner!')
+                            if event.over_price < 0:
+                                profit = 100 / abs(event.over_price) * stake
+                            elif event.over_price > 0:
+                                profit = event.over_price / 100 * stake
+
+                                total_return = profit + stake
+                                betslip.profit = profit
+                                betslip.total_return = total_return
+                                betslip.processed_ticket = True
+                                betslip.winning_ticket = True
+
+                                AccountAdjustments.objects.create(
+                                    user_account=account,
+                                    previous_balance=account.current_balance,
+                                    amount_adjusted=total_return,
+                                    new_balance=account.current_balance + total_return,
+                                    notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                                )
+                                account.current_balance += total_return
+                                betslip.save()
+                                account.save()
+                        else:
+                            print('Better luck next time.')
+                            betslip.processed_ticket = True
+                            betslip.save()
+                    elif betslip.predicted_outcome == 'under':
+                        game_over_under = event.over_under_points
+                        game_total_points = event.home_team_points_scored + event.away_team_points_scored
+                        if game_total_points < game_over_under:
+                            print('We have a winner!')
+                            if event.under_price < 0:
+                                profit = 100 / abs(event.under_price) * stake
+                            elif event.under_price > 0:
+                                profit = event.under_price / 100 * stake
+
+                                total_return = profit + stake
+                                betslip.profit = profit
+                                betslip.total_return = total_return
+                                betslip.processed_ticket = True
+                                betslip.winning_ticket = True
+
+                                AccountAdjustments.objects.create(
+                                    user_account=account,
+                                    previous_balance=account.current_balance,
+                                    amount_adjusted=total_return,
+                                    new_balance=account.current_balance + total_return,
+                                    notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                                )
+                                account.current_balance += total_return
+                                betslip.save()
+                                account.save()
+                        else:
+                            print('Better luck next time.')
+                            betslip.processed_ticket = True
+                            betslip.save()
