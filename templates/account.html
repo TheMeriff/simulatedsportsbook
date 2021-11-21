@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Page</title>
+</head>
+<body>
+    <h2>{{ username }}'s Account Info</h2>
+    <h4>Starting Balance: {{ account.starting_balance }}</h4>
+    <h4>Current Balance: {{ account.current_balance }}</h4>
+    {% for adjustment in adjustments %}
+        <h5>Previous Balance: {{ adjustment.previous_balance }}</h5>
+        <h5>Amount Adjusted: {{ adjustment.amount_adjusted }}</h5>
+        <h5>Updated Balance: {{ adjustment.new_balance }}</h5>
+        <h5>Notes: {{ adjustment.notes }}</h5>
+        <p>-------------------------------------------------</p>
+    {% endfor %}
+</body>
+</html>

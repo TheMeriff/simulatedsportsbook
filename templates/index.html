@@ -30,12 +30,16 @@
 <body style="background-color: #202124; color: white">
 <div style="text-align: center">
     <h2>Sam's Simulated Sportsbook</h2>
+        <h4>Logged in as {{ username.title }}</h4>
+        <h5><a href="/account">Check your account balances here.</a></h5>
+
+        <h5><a href="/logout">Logout</a></h5>
         {% if messages %}
             {% for message in messages %}
                 <h2>{{ message }}</h2>
             {% endfor %}
         {% endif %}
-    <h4>NFL, NBA, and MMA lines.</h4>
+    <h4>NFL, and NBA lines.</h4>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
         <div class="collapse-content" style="text-align: center">
             {% for event in nba_events %}
@@ -68,18 +72,18 @@
     <br>
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>
-        <div class="collapse-content" style="text-align: center">
-            {% for event in mma_events %}
-            <div class="ui message" style="background-color: #202124">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #5C5F58" id="mma_fight">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center">
-                    <p>{{ event.home_team}} | Money Line: {{ event.home_team_money_line_price }}</p>
-                    <p>{{ event.away_team}} | Money Line: {{ event.away_team_money_line_price }}</p>
-                </div>
-            </div>
-        {% endfor %}
-        </div>
+{#    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>#}
+{#        <div class="collapse-content" style="text-align: center">#}
+{#            {% for event in mma_events %}#}
+{#            <div class="ui message" style="background-color: #202124">#}
+{#                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #5C5F58" id="mma_fight">{{ event }}</button>#}
+{#                <div class="collapse-content" style="text-align: center">#}
+{#                    <p>{{ event.home_team}} | Money Line: {{ event.home_team_money_line_price }}</p>#}
+{#                    <p>{{ event.away_team}} | Money Line: {{ event.away_team_money_line_price }}</p>#}
+{#                </div>#}
+{#            </div>#}
+{#        {% endfor %}#}
+{#        </div>#}
 </div>
 
 </body>
