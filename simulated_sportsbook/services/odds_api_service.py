@@ -85,6 +85,7 @@ class OpenApiService:
         spread = None
         markets = None
         external_book_data = None
+        event_last_updated = None
         external_event_id = event['id']
         start_time = event['commence_time']
         start_time_obj = parser.parse(start_time)

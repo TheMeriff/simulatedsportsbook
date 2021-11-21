@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from simulated_sportsbook.models import Event
+from simulated_sportsbook.models import Event, Betslip
 from users.models import Account, AccountAdjustments
 
 
@@ -23,6 +23,15 @@ class EventAdmin(admin.ModelAdmin):
     fieldsets = ()
 
 
+@admin.register(Betslip)
+class BetslipAdmin(admin.ModelAdmin):
+    fields = ['user_account', 'event', 'stake', 'total_return', 'profit', 'winning_ticket']
+    readonly_fields = []
+    list_display = ['user_account', 'event', 'stake', 'total_return', 'profit', 'winning_ticket']
+    ordering = ['user_account', 'event', 'stake', 'total_return', 'profit', 'winning_ticket']
+    search_fields = ['user_account', 'event']
+
+
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
     fields = ['user', 'current_balance', 'starting_balance']
@@ -32,6 +41,7 @@ class AccountAdmin(admin.ModelAdmin):
     ordering = []
     search_fields = ['user', 'current_balance']
     fieldsets = []
+
 
 @admin.register(AccountAdjustments)
 class AccountAdjustmentsAdmin(admin.ModelAdmin):
