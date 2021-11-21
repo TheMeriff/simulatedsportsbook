@@ -30,6 +30,8 @@ class Event(models.Model):
     last_updated = models.DateTimeField(null=True, blank=True)
     external_sportsbook = models.CharField(max_length=75, null=True, blank=True)
     completed = models.BooleanField(default=False)
+    away_team_points_scored = models.IntegerField(null=True, blank=True)
+    home_team_points_scored = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.home_team} | {self.away_team} | {self.start_time.month}/{self.start_time.day}/{self.start_time.year} @ ' \

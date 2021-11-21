@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from simulated_sportsbook.models import Event
 from simulated_sportsbook.services.odds_api_service import OpenApiService
+from simulated_sportsbook.services.results_service import ResultsService
 
 
 def index(request):
@@ -30,7 +31,10 @@ def refresh_odds(request):
             nfl_refresh = request.POST.get('nfl_refresh')
             mma_refresh = request.POST.get('mma_refresh')
             if nba_refresh == 'on':
+                # Pull in new odds
                 nba_events = OpenApiService().get_nba_odds()
+                # Update existing NBA events with scores
+                ResultsService.process_nba_events()
             if nfl_refresh == 'on':
                 nfl_events = OpenApiService().get_nfl_odds()
             if mma_refresh == 'on':
