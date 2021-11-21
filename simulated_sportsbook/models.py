@@ -39,12 +39,25 @@ class Event(models.Model):
 
 
 class Betslip(models.Model):
+    MONEY_LINE = 'money line'
+    SPREAD = 'spread'
+    OVER_UNDER = 'over under'
+
+    TYPES = [
+        (MONEY_LINE, 'Money Line'),
+        (SPREAD, 'Spread'),
+        (OVER_UNDER, 'Over Under')
+    ]
+
     user_account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='account')
+    type_of_bet = models.CharField(choices=TYPES, max_length=20, null=False, blank=False, default=MONEY_LINE)
+    predicted_outcome = models.CharField(max_length=75, null=True, blank=True)
     event = models.ForeignKey(Event, on_delete=models.PROTECT, related_name='selected_event')
     stake = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     total_return = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     profit = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     winning_ticket = models.BooleanField(default=False)
+    processed_ticket = models.BooleanField(default=False)
 
     def __str__(self):
         return f'id: {self.id} | Steak: {self.stake}'

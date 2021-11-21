@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from simulated_sportsbook.models import Event
+from simulated_sportsbook.models import Event, Betslip
+from simulated_sportsbook.services.betslips import BetslipsService
 from simulated_sportsbook.services.odds_api_service import OpenApiService
 from simulated_sportsbook.services.results_service import ResultsService
 
@@ -30,6 +31,7 @@ def refresh_odds(request):
             nba_refresh = request.POST.get('nba_refresh')
             nfl_refresh = request.POST.get('nfl_refresh')
             mma_refresh = request.POST.get('mma_refresh')
+            process_betslips = request.POST.get('process_betslips')
             if nba_refresh == 'on':
                 # Pull in new odds
                 nba_events = OpenApiService().get_nba_odds()
@@ -39,6 +41,9 @@ def refresh_odds(request):
                 nfl_events = OpenApiService().get_nfl_odds()
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
+            if process_betslips == 'on':
+                betslip = Betslip.objects.get(id=1)
+                BetslipsService().process_betslip(betslip)
             context = {'nba_events': nba_events, 'nfl_events': nfl_events, 'mma_events': mma_events}
         except Exception as e:
             return HttpResponse(e)
