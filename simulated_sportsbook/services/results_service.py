@@ -16,22 +16,25 @@ class ResultsService:
     def process_nfl_events():
         updated_events = []
         now = datetime.utcnow()
-        date_filter = now - timedelta(hours=16)
-        nba_events = Event.objects.filter(sport=Event.NFL).exclude(start_time__gte=date_filter).exclude(completed=True)
-        for event in nba_events:
+        date_filter = now - timedelta(days=1)
+        nfl_events = Event.objects.filter(sport=Event.NFL).exclude(start_time__gte=date_filter).exclude(completed=True)
+        for event in nfl_events:
             updated_event = ResultsService.get_nfl_result(event)
             updated_events.append(updated_event)
-        print(f'Updated {len(updated_events)} NBA events with scores and marked them as complete.')
+        print(f'Updated {len(updated_events)} NFL events with scores and marked them as complete.')
 
     @staticmethod
     def get_nfl_result(event):
         team_abbreviation = nfl_team_abbreviations[event.home_team]
         url = f'{event.start_time.year}{event.start_time.month}{event.start_time.day}0{team_abbreviation.lower()}'
         boxscore = Boxscore(url)
-        event.away_team_points_scored = boxscore.away_points
-        event.home_team_points_scored = boxscore.home_points
-        event.last_updated = datetime.utcnow()
-        event.save()
+        # Check both in the event of one team getting shutout
+        if boxscore.home_points or boxscore.away_points:
+            event.away_team_points_scored = boxscore.away_points
+            event.home_team_points_scored = boxscore.home_points
+            event.last_updated = datetime.utcnow()
+            event.completed = True
+            event.save()
 
         return event
 

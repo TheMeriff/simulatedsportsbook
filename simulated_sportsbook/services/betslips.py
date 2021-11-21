@@ -28,7 +28,7 @@ class BetslipsService:
 
         type_of_bet = data['type_of_bet']
         formatted_bet_type = None
-        if type_of_bet == 'money line':
+        if type_of_bet == 'money line' or 'money_line':
             formatted_bet_type = Betslip.MONEY_LINE
         elif type_of_bet == 'spread':
             formatted_bet_type = Betslip.SPREAD

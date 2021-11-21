@@ -32,9 +32,9 @@ def index(request):
         if request.user.is_anonymous:
             return redirect("/login/")
         username = request.user.username
-        nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time')
-        nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time')
-        mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time')
+        nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True)
+        nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True)
+        mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True)
 
         context = {
             'nba_events': nba_events,
@@ -66,6 +66,7 @@ def refresh_odds(request):
                 ResultsService.process_nba_events()
             if nfl_refresh == 'on':
                 nfl_events = OpenApiService().get_nfl_odds()
+                ResultsService.process_nfl_events()
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
             if process_betslips == 'on':
