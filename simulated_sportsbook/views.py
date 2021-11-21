@@ -42,8 +42,9 @@ def refresh_odds(request):
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
             if process_betslips == 'on':
-                betslip = Betslip.objects.get(id=1)
-                BetslipsService().process_betslip(betslip)
+                betslips = Betslip.objects.all().exclude(processed_ticket=True)
+                for betslip in betslips:
+                    BetslipsService().process_betslip(betslip)
             context = {'nba_events': nba_events, 'nfl_events': nfl_events, 'mma_events': mma_events}
         except Exception as e:
             return HttpResponse(e)
