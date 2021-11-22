@@ -1,11 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 
 import requests
 from dateutil import parser
-from dateutil.tz import tz
-from django.http import HttpResponse
-
 from simulated_sportsbook.models import Event
 
 

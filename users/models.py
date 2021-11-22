@@ -9,7 +9,7 @@ class Account(models.Model):
     current_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=500.00)
 
     def __str__(self):
-        return f'id: {self.id} | {self.user.username} | {self.current_balance}'
+        return f'{self.user.username} | Current Balance: {self.current_balance}'
 
 
 class AccountAdjustments(models.Model):

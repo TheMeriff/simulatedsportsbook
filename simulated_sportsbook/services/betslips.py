@@ -18,17 +18,17 @@ class BetslipsService:
         user_account.current_balance -= Decimal(stake)
         user_account.save()
         print(f'{user_account.user.username} account value after deducting wager | {user_account.current_balance}')
-        account_adjustment = AccountAdjustments.objects.create(
+        AccountAdjustments.objects.create(
             user_account=user_account,
             previous_balance=int(starting_balance),
             new_balance=user_account.current_balance,
             amount_adjusted=adjusted_stake,
-            notes=f'Bet placed on {data["event"]} for {stake} dollars.'
+            notes=f'Bet placed on {data["predicted_outcome"]} in {data["event"]} for {stake} dollars.'
         )
 
         type_of_bet = data['type_of_bet']
         formatted_bet_type = None
-        if type_of_bet == 'money line' or 'money_line':
+        if type_of_bet in ('money line', 'money_line'):
             formatted_bet_type = Betslip.MONEY_LINE
         elif type_of_bet == 'spread':
             formatted_bet_type = Betslip.SPREAD
@@ -41,7 +41,7 @@ class BetslipsService:
             predicted_outcome=data['predicted_outcome'],
             stake=stake,
         )
-        print('Betslip successfully created!')
+        print(f'Betslip successfully created for {user_account.user.username.title()}')
         return betslip
 
     def process_betslip(self, betslip):
@@ -88,7 +88,7 @@ class BetslipsService:
             if matched_prediction:
                 if type_of_bet == Betslip.MONEY_LINE:
                     if event_winner == matched_prediction:
-                        print('We got a winner here!')
+                        print(f'We got a winner here! {betslip.user_account}')
                         if matched_money_line_price < 0:
                             profit = 100 / abs(matched_money_line_price) * stake
                         elif matched_money_line_price > 0:
@@ -215,3 +215,6 @@ class BetslipsService:
                             print('Better luck next time.')
                             betslip.processed_ticket = True
                             betslip.save()
+        else:
+            print(f'{event} has not been marked as complete. Try refreshing the results to check if the game '
+                  f'has been played.')

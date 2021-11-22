@@ -32,6 +32,8 @@ def index(request):
         if request.user.is_anonymous:
             return redirect("/login/")
         username = request.user.username
+        user_account = Account.objects.get(user=request.user)
+        current_balance = user_account.current_balance
         nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True)
         nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True)
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True)
@@ -41,6 +43,7 @@ def index(request):
             'nfl_events': nfl_events,
             'mma_events': mma_events,
             'username': username,
+            'current_balance': current_balance
         }
 
         return render(request, 'index.html', context=context)

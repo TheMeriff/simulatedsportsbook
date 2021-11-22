@@ -28,10 +28,11 @@ class EventAdmin(admin.ModelAdmin):
 class BetslipAdmin(admin.ModelAdmin):
     fields = ['user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
               'winning_ticket', 'processed_ticket']
-    readonly_fields = ['user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
+    readonly_fields = ['user_account', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
               'winning_ticket', 'processed_ticket']
-    list_display = ['user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
+    list_display = ['id', 'user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
                     'winning_ticket', 'processed_ticket']
+    list_filter = ['type_of_bet', 'winning_ticket', 'processed_ticket']
     ordering = ['user_account', 'event', 'stake', 'total_return', 'profit', 'winning_ticket']
     search_fields = ['user_account', 'event']
 
