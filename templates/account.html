@@ -2,19 +2,169 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Account Page</title>
+    <title>Account Information</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
 </head>
-<body>
-    <h2>{{ username }}'s Account Info</h2>
-    <h3>Starting Balance: {{ account.starting_balance }}</h3>
-    <h3>Current Balance: {{ account.current_balance }}</h3>
-    <p>-------------------------------------------------</p>
-    {% for adjustment in adjustments %}
-        <h5>Previous Balance: {{ adjustment.previous_balance }}</h5>
-        <h5>Amount Adjusted: {{ adjustment.amount_adjusted }}</h5>
-        <h5>Updated Balance: {{ adjustment.new_balance }}</h5>
-        <h5>Notes: {{ adjustment.notes }}</h5>
-        <p>-------------------------------------------------</p>
+<body style="background-color: #202124; color: white">
+<br>
+<h1 style="text-align: center"><a href="/">Place a wager</a></h1>
+<div class="ui cards" style="text-align: center; width: 50%; margin: 0 auto; align-content: center">
+    <div class="card" style="width: 50%; margin: 0 auto;">
+        <div class="content">
+            <div class="header">{{ username }}</div>
+            <div class="description">
+                <h3>Current Balance: {{ account.current_balance }}</h3>
+                <p>Starting Balance: {{ account.starting_balance }}</p>
+                <p>Total Betslips: {{ total_betslips }}</p>
+                <p>Processed Betslips: {{ num_processed_betslips }}</p>
+                <p>Winning Betslips: {{ num_winning_tickets }}</p>
+                <p>Win Percentage: {{ win_percent }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+
+<div style="text-align: center">
+    <h2>Betslips</h2>
+    <h3>Wins</h3>
+    {% for betslip in winning_tickets %}
+    <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+      <div class="content">
+        <div class="header">{{ betslip.event }}</div>
+      </div>
+      <div class="content" style="text-align: center">
+        <div class="ui small feed">
+            <div class="event">
+                <div class="content">
+                    <div class="summary" style="text-align: center">
+                        <p>Internal ID: {{ betslip.id }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="event">
+                <div class="content">
+                    <div class="summary" style="text-align: center">
+                        <p>Type of Bet: {{ betslip.type_of_bet.title }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                  <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                 <p>Amount Wagered: {{ betslip.stake }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                 <p>Profit: {{ betslip.profit }}</p>
+              </div>
+            </div>
+          </div>
+            <div class="event">
+              <div class="content">
+                <div class="summary" style="text-align: center">
+                   <p>Total Return: {{ betslip.total_return }}</p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
+    <br>
+    <h3>Losses</h3>
+    {% for betslip in losing_tickets %}
+    <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+      <div class="content">
+        <div class="header">{{ betslip.event }}</div>
+      </div>
+      <div class="content">
+        <div class="ui small feed">
+            <div class="event">
+                <div class="content">
+                    <div class="summary" style="text-align: center">
+                        <p>Internal ID: {{ betslip.id }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="event">
+                <div class="content">
+                    <div class="summary" style="text-align: center">
+                        <p>Type of Bet: {{ betslip.type_of_bet.title }}</p>
+                    </div>
+                </div>
+            </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                  <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                 <p>Amount Wagered: {{ betslip.stake }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+<br>
+<div style="text-align: center">
+    <h3>Account Adjustments</h3>
+    {% for adjustment in adjustments %}
+    <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+      <div class="content">
+        <div class="header">{{ adjustment.notes }}</div>
+      </div>
+      <div class="content">
+        <div class="ui small feed">
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                  <p>Previous Balance: {{ adjustment.previous_balance }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                 <p>Amount Adjusted: {{ adjustment.amount_adjusted }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+                 <p>New Balance: {{ adjustment.new_balance }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
 </body>
 </html>

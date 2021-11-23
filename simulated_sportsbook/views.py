@@ -93,10 +93,31 @@ def account(request):
     username = request.user.username
     user_account = Account.objects.get(user=user)
     adjustments = AccountAdjustments.objects.filter(user_account=user_account)
+    user_betslips = Betslip.objects.filter(user_account=user_account)
+    total_betslips = len(user_betslips)
+    processed_betslips = user_betslips.exclude(processed_ticket=False)
+    winning_tickets = processed_betslips.filter(winning_ticket=True)
+    winning_percent = winning_tickets.count() / processed_betslips.count()
+    losing_tickets = processed_betslips.exclude(winning_ticket=True)
+
+
+    largest_bet = 0
+    for bet in user_betslips:
+        if bet.stake > largest_bet:
+            largest_bet = bet.stake
+
     context = {
         'username': username.title(),
         'account': user_account,
-        'adjustments': adjustments
+        'adjustments': adjustments,
+        'total_betslips': total_betslips,
+        'num_processed_betslips': len(processed_betslips),
+        'num_winning_tickets': len(winning_tickets),
+        'win_percent': winning_percent * 100,
+        'largest_bet': largest_bet,
+        'winning_tickets': winning_tickets,
+        'losing_tickets': losing_tickets,
+        'num_losing_tickets': losing_tickets.count()
     }
 
     return render(request, 'account.html', context=context)

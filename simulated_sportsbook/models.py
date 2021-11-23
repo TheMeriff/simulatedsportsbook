@@ -34,8 +34,8 @@ class Event(models.Model):
     home_team_points_scored = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.home_team} | {self.away_team} | {self.start_time.month}/{self.start_time.day}/{self.start_time.year} @ ' \
-               f'{self.start_time.hour}: {self.start_time.minute}'
+        return f'{self.away_team} at {self.home_team} | {self.start_time.month}/{self.start_time.day}/{self.start_time.year} @ ' \
+               f'{self.start_time.hour}:{self.start_time.minute}'
 
 
 class Betslip(models.Model):
@@ -60,4 +60,4 @@ class Betslip(models.Model):
     processed_ticket = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'id: {self.id} | Steak: {self.stake}'
+        return f'id: {self.id} | {self.type_of_bet} | {self.predicted_outcome} | Steak: {self.stake}'
