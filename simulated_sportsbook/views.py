@@ -31,6 +31,8 @@ def index(request):
     else:
         if request.user.is_anonymous:
             return redirect("/login/")
+        house_account = Account.objects.get(id=1)
+        house_balance = house_account.current_balance
         username = request.user.username
         user_account = Account.objects.get(user=request.user)
         current_balance = user_account.current_balance
@@ -43,7 +45,8 @@ def index(request):
             'nfl_events': nfl_events,
             'mma_events': mma_events,
             'username': username,
-            'current_balance': current_balance
+            'current_balance': current_balance,
+            'house_balance': house_balance
         }
 
         return render(request, 'index.html', context=context)

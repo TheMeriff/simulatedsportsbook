@@ -31,7 +31,8 @@
 <div style="text-align: center">
     <h2>Sam's Simulated Sportsbook</h2>
         <h4>Logged in as {{ username.title }}</h4>
-        <h4>Current Balance: {{ current_balance }}</h4>
+        <h4>{{ username.title }}'s Current Balance: {{ current_balance }}</h4>
+        <h4>Sportsbook House Account Current Balance: {{ house_balance }}</h4>
         <h5><a href="/account">Check your account balances here.</a></h5>
 
         <h5><a href="/logout">Logout</a></h5>

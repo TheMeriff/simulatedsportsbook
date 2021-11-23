@@ -1,7 +1,7 @@
 from decimal import Decimal
 
 from simulated_sportsbook.models import Betslip
-from users.models import AccountAdjustments
+from users.models import AccountAdjustments, Account
 
 
 class BetslipsService:
@@ -9,21 +9,42 @@ class BetslipsService:
         pass
 
     def create_betslip(self, data):
+        house_account = Account.objects.get(id=1)
+        house_starting_balance = house_account.current_balance
+        print(f'House balance before wager is placed. | {house_account.current_balance}')
+
         user_account = data['account']
         starting_balance = user_account.current_balance
         print(f'{user_account.user.username} account value before deducting wager | {user_account.current_balance}')
+
         stake = data['stake']
         stake = Decimal(stake)
-        adjusted_stake = -abs(stake)
+        adjusted_stake_for_user = -abs(stake)
+
         user_account.current_balance -= Decimal(stake)
         user_account.save()
         print(f'{user_account.user.username} account value after deducting wager | {user_account.current_balance}')
+
+        house_account.current_balance += stake
+        house_account.save()
+        print(f'House account was incremented by {stake}.')
+        print(f'House account value after accepting wager {house_account.current_balance}')
+
+        # Adjustment for the user
         AccountAdjustments.objects.create(
             user_account=user_account,
             previous_balance=int(starting_balance),
             new_balance=user_account.current_balance,
-            amount_adjusted=adjusted_stake,
+            amount_adjusted=adjusted_stake_for_user,
             notes=f'Bet placed on {data["predicted_outcome"]} in {data["event"]} for {stake} dollars.'
+        )
+        # Adjustment for the house
+        AccountAdjustments.objects.create(
+            user_account=house_account,
+            previous_balance=int(house_starting_balance),
+            new_balance=house_account.current_balance,
+            amount_adjusted=stake,
+            notes=f'{user_account.user.username} placed a bet on {data["predicted_outcome"]} in {data["event"]} for {stake} dollars.'
         )
 
         type_of_bet = data['type_of_bet']
@@ -45,6 +66,7 @@ class BetslipsService:
         return betslip
 
     def process_betslip(self, betslip):
+        house_account = Account.objects.get(id=1)
         matched_prediction = None
         matched_money_line_price = None
         profit = None
@@ -99,6 +121,7 @@ class BetslipsService:
                         betslip.total_return = total_return
                         betslip.processed_ticket = True
                         betslip.winning_ticket = True
+
                         AccountAdjustments.objects.create(
                             user_account=account,
                             previous_balance=account.current_balance,
@@ -106,9 +129,20 @@ class BetslipsService:
                             new_balance=account.current_balance + total_return,
                             notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
                         )
+                        AccountAdjustments.objects.create(
+                            user_account=house_account,
+                            previous_balance=house_account.current_balance,
+                            amount_adjusted=-abs(total_return),
+                            new_balance=house_account.current_balance - total_return,
+                            notes=f'Payout from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                        )
                         account.current_balance += total_return
-                        betslip.save()
                         account.save()
+
+                        house_account.current_balance -= total_return
+                        house_account.save()
+
+                        betslip.save()
 
                     else:
                         print('Better luck next time!')
@@ -146,10 +180,22 @@ class BetslipsService:
                             new_balance=account.current_balance + total_return,
                             notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
                         )
+                        AccountAdjustments.objects.create(
+                            user_account=house_account,
+                            previous_balance=house_account.current_balance,
+                            amount_adjusted=-abs(total_return),
+                            new_balance=house_account.current_balance - total_return,
+                            notes=f'Payout from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                        )
                         account.current_balance += total_return
-                        betslip.save()
                         account.save()
+
+                        house_account.current_balance -= total_return
+                        house_account.save()
+
+                        betslip.save()
                     else:
+                        print('Better luck next time!')
                         betslip.processed_ticket = True
                         betslip.winning_ticket = False
                         betslip.save()
@@ -165,22 +211,31 @@ class BetslipsService:
                             elif event.over_price > 0:
                                 profit = event.over_price / 100 * stake
 
-                                total_return = profit + stake
-                                betslip.profit = profit
-                                betslip.total_return = total_return
-                                betslip.processed_ticket = True
-                                betslip.winning_ticket = True
+                            total_return = profit + stake
+                            betslip.profit = profit
+                            betslip.total_return = total_return
+                            betslip.processed_ticket = True
+                            betslip.winning_ticket = True
 
-                                AccountAdjustments.objects.create(
-                                    user_account=account,
-                                    previous_balance=account.current_balance,
-                                    amount_adjusted=total_return,
-                                    new_balance=account.current_balance + total_return,
-                                    notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
-                                )
-                                account.current_balance += total_return
-                                betslip.save()
-                                account.save()
+                            AccountAdjustments.objects.create(
+                                user_account=account,
+                                previous_balance=account.current_balance,
+                                amount_adjusted=total_return,
+                                new_balance=account.current_balance + total_return,
+                                notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                            )
+                            AccountAdjustments.objects.create(
+                                user_account=house_account,
+                                previous_balance=house_account.current_balance,
+                                amount_adjusted=-abs(total_return),
+                                new_balance=house_account.current_balance - total_return,
+                                notes=f'Payout from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                            )
+                            account.current_balance += total_return
+                            account.save()
+                            house_account.current_balance - total_return
+                            house_account.save()
+                            betslip.save()
                         else:
                             print('Better luck next time.')
                             betslip.processed_ticket = True
@@ -208,9 +263,18 @@ class BetslipsService:
                                     new_balance=account.current_balance + total_return,
                                     notes=f'Winnings from betslip ID : {betslip.id} | {betslip.type_of_bet}'
                                 )
+                                AccountAdjustments.objects.create(
+                                    user_account=house_account,
+                                    previous_balance=house_account.current_balance,
+                                    amount_adjusted=-abs(total_return),
+                                    new_balance=house_account.current_balance - total_return,
+                                    notes=f'Payout from betslip ID : {betslip.id} | {betslip.type_of_bet}'
+                                )
                                 account.current_balance += total_return
-                                betslip.save()
                                 account.save()
+                                house_account.current_balance -= total_return
+                                house_account.save()
+                                betslip.save()
                         else:
                             print('Better luck next time.')
                             betslip.processed_ticket = True

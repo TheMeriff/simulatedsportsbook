@@ -1,3 +1,4 @@
+import random
 from datetime import timedelta
 from decimal import Decimal
 
@@ -8,6 +9,10 @@ from simulated_sportsbook.models import Event
 
 class OpenApiService:
     def __init__(self):
+        self.api_keys = [
+            'ead60e7fddf8d0aa97a31bfdee54b5c1',
+            'be267f183bb2c88b3a417dd7e4a2a19b'
+        ]
         existing_events = Event.objects.all()
         self.existing_event_map = {}
         for event in existing_events:
@@ -15,7 +20,7 @@ class OpenApiService:
 
     def get_nfl_odds(self):
         nfl_events = []
-        r = requests.get('https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey=ead60e7fddf8d0aa97a31bfdee54b5c1&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
             print('Used requests', r.headers['x-requests-used'])
@@ -31,7 +36,7 @@ class OpenApiService:
 
     def get_nba_odds(self):
         nba_events = []
-        r = requests.get('https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey=ead60e7fddf8d0aa97a31bfdee54b5c1&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
 
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
@@ -48,7 +53,7 @@ class OpenApiService:
 
     def get_mma_odds(self):
         mma_events = []
-        url = 'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey=ead60e7fddf8d0aa97a31bfdee54b5c1&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        url = f'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
         r = requests.get(url)
 
         if r.status_code == 200:
