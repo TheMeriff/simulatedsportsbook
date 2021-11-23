@@ -6,8 +6,40 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
+    <style>
+        .collapse {
+            background-color: black;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+    }
+        .collapse-content {
+            color: white;
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: black
+    }
+    </style>
 </head>
-<body>
+<body style="background-color: #202124; color: white">
+    <nav>
+        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Sam's Simulated Sportsbook</button>
+        <div class="collapse-content" style="text-align: center">
+            <div class="collapse">
+                <h5><a href="/account">Account/Betslip stats</a></h5>
+                <h5><a href="/">Place a Wager</a></h5>
+                <h5><a href="/refresh_odds">Refresh Odds</a></h5>
+                <h5><a href="/logout">Logout</a></h5>
+            </div>
+        </div>
+    <br>
+    <br>
     <div style="text-align: center;">
         {% if nba_events %}
             <h2>The following NBA Events were imported</h2>
@@ -65,3 +97,19 @@
     </form>
 </body>
 </html>
+<script>
+{# show/hide warehouse nested rows #}
+    let coll = document.getElementsByClassName("collapse");
+    for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            console.log(this)
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>

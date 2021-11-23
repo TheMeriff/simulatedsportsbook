@@ -1,0 +1,30 @@
+<head>
+    <meta charset="UTF-8">
+    <title>Simulated Sportsbook</title>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
+</head>
+
+<body style="background-color: #202124; color: white; text-align: center; margin: 1rem">
+    <h1>Sam's Simulated Sportsbook</h1>
+    {% for message in messages %}
+        <h4>{{ message }}</h4>
+        <hr>
+    {% endfor %}
+    <h3>Login</h3>
+    <form class="ui form" method="post" action="{% url 'login' %}" style="width: 30%; margin: 0 auto">
+        {% csrf_token %}
+        {{ form.username.label_tag }}
+        {{ form.username }}
+        <br>
+        <br>
+        {{ form.password.label_tag }}
+        {{ form.password }}
+
+        {{ form.errors }}
+        <br>
+        <br>
+        <button class="ui button" type="submit" value="Login">Login</button>
+    </form>
+</body>

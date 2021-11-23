@@ -30,7 +30,7 @@ def index(request):
             render(request, e)
     else:
         if request.user.is_anonymous:
-            return redirect("/login/")
+            return redirect("login")
         house_account = Account.objects.get(id=1)
         house_balance = house_account.current_balance
         username = request.user.username
@@ -41,6 +41,7 @@ def index(request):
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True)
 
         context = {
+            'account': user_account,
             'nba_events': nba_events,
             'nfl_events': nfl_events,
             'mma_events': mma_events,
@@ -97,7 +98,10 @@ def account(request):
     total_betslips = len(user_betslips)
     processed_betslips = user_betslips.exclude(processed_ticket=False)
     winning_tickets = processed_betslips.filter(winning_ticket=True)
-    winning_percent = winning_tickets.count() / processed_betslips.count()
+    if winning_tickets and processed_betslips:
+        winning_percent = winning_tickets.count() / processed_betslips.count()
+    else:
+        winning_percent = None
     losing_tickets = processed_betslips.exclude(winning_ticket=True)
 
 
@@ -111,9 +115,9 @@ def account(request):
         'account': user_account,
         'adjustments': adjustments,
         'total_betslips': total_betslips,
-        'num_processed_betslips': len(processed_betslips),
-        'num_winning_tickets': len(winning_tickets),
-        'win_percent': winning_percent * 100,
+        'num_processed_betslips': len(processed_betslips) if processed_betslips else 0,
+        'num_winning_tickets': len(winning_tickets) if winning_percent else 0,
+        'win_percent': winning_percent * 100 if winning_percent else 'Not Available',
         'largest_bet': largest_bet,
         'winning_tickets': winning_tickets,
         'losing_tickets': losing_tickets,

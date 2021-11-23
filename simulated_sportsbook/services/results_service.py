@@ -16,7 +16,7 @@ class ResultsService:
     def process_nfl_events():
         updated_events = []
         now = datetime.utcnow()
-        date_filter = now - timedelta(days=1)
+        date_filter = now - timedelta(hours=12)
         nfl_events = Event.objects.filter(sport=Event.NFL).exclude(start_time__gte=date_filter).exclude(completed=True)
         for event in nfl_events:
             updated_event = ResultsService.get_nfl_result(event)
@@ -35,6 +35,7 @@ class ResultsService:
             event.last_updated = datetime.utcnow()
             event.completed = True
             event.save()
+            print(f'{event} was successfully updated with a score.')
 
         return event
 

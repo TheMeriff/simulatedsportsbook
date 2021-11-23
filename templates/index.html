@@ -29,17 +29,39 @@
 </head>
 <body style="background-color: #202124; color: white">
 <div style="text-align: center">
-    <h2>Sam's Simulated Sportsbook</h2>
-        <h4>{{ username.title }}'s Current Balance: {{ current_balance }}</h4>
-        <h4>Sportsbook House Account Current Balance: {{ house_balance }}</h4>
-        <h5><a href="/account">Account/Betslip stats</a></h5>
 
-        <h5><a href="/logout">Logout</a></h5>
-        {% if messages %}
-            {% for message in messages %}
-                <h2>{{ message }}</h2>
-            {% endfor %}
-        {% endif %}
+    <nav>
+        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Sam's Simulated Sportsbook</button>
+        <div class="collapse-content" style="text-align: center">
+            <div class="collapse">
+                <h5><a href="/account">Account/Betslip stats</a></h5>
+                <h5><a href="/refresh_odds">Refresh Odds</a></h5>
+                <h5><a href="/logout">Logout</a></h5>
+            </div>
+        </div>
+    </nav>
+    <br>
+    <br>
+    {% if messages %}
+                {% for message in messages %}
+                    <h2>{{ message }}</h2>
+                {% endfor %}
+    {% endif %}
+    <div class="ui cards" style="text-align: center; width: 50%; margin: 0 auto; align-content: center">
+        <div class="card" style="width: 50%; margin: 0 auto;">
+            <div class="content">
+                <div class="header">{{ username.title }}</div>
+                <div class="description">
+                    <hr>
+                    <h4>Current Balance: {{ account.current_balance }}</h4>
+                    <h4>Sportsbook Account Current Balance: {{ house_balance }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <h4>NFL, and NBA lines.</h4>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
         <div class="collapse-content" style="text-align: center">

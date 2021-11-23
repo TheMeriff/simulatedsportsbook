@@ -1,4 +1,5 @@
 from django.contrib.auth import logout, authenticate, login
+from django.contrib.auth.models import User
 from django.contrib.auth.views import LogoutView
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -9,14 +10,15 @@ from users.services.user_account_service import UserAccountService
 
 def login_request(request):
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
-        form.clean()
         user = request.user
-        login(request, user=user)
-        return redirect('index')
+        if not user.is_anonymous:
+            login(request, user=user)
+            return redirect('index')
+        else:
+            return render(request, 'registration/login.html')
     else:
         form = AuthenticationForm()
-    return render(request, 'users/login.html', context={'form': form})
+    return render(request, 'registration/login.html', context={'form': form})
 
 
 def register(request):
@@ -27,6 +29,7 @@ def register(request):
             username = form.cleaned_data.get('username')
             UserAccountService.create_account_association(username)
             messages.success(request, f'User account added for {username}.')
+            login(request, User.objects.get(username=username))
             return redirect('index')
 
     else:
@@ -39,4 +42,4 @@ def logout_request(request):
     form = AuthenticationForm()
     logout(request)
     messages.info(request, "Logged out successfully!")
-    return render(request, 'users/login.html', context={'form': form})
+    return render(request, 'registration/login.html', context={'form': form})
