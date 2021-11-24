@@ -41,6 +41,7 @@ class OpenApiService:
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
             print('Used requests', r.headers['x-requests-used'])
+            print('NBA odds update')
             event_records = r.json()
             for event in event_records:
                 external_event_id = event['id']

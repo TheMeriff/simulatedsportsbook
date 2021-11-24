@@ -18,10 +18,13 @@ class ResultsService:
         now = datetime.utcnow()
         date_filter = now - timedelta(hours=12)
         nfl_events = Event.objects.filter(sport=Event.NFL).exclude(start_time__gte=date_filter).exclude(completed=True)
-        for event in nfl_events:
-            updated_event = ResultsService.get_nfl_result(event)
-            updated_events.append(updated_event)
-        print(f'Updated {len(updated_events)} NFL events with scores and marked them as complete.')
+        if nfl_events:
+            for event in nfl_events:
+                updated_event = ResultsService.get_nfl_result(event)
+                updated_events.append(updated_event)
+                print(f'Updated {len(updated_events)} NFL events with scores and marked them as complete.')
+        else:
+            print('No NFL events to update')
 
     @staticmethod
     def get_nfl_result(event):
@@ -43,12 +46,15 @@ class ResultsService:
     def process_nba_events():
         updated_events = []
         now = datetime.utcnow()
-        date_filter = now - timedelta(hours=10)
+        date_filter = now - timedelta(hours=5)
         nba_events = Event.objects.filter(sport=Event.NBA).exclude(start_time__gte=date_filter).exclude(completed=True)
-        for event in nba_events:
-            updated_event = ResultsService.get_nba_result(event)
-            updated_events.append(updated_event)
-        print(f'Updated {len(updated_events)} NBA events with scores and marked them as complete.')
+        if nba_events:
+            for event in nba_events:
+                updated_event = ResultsService.get_nba_result(event)
+                updated_events.append(updated_event)
+                print(f'Updated {len(updated_events)} NBA events with scores and marked them as complete.')
+        else:
+            print('No NBA games to update')
 
     @staticmethod
     def get_nba_result(event):
