@@ -20,7 +20,7 @@ class OpenApiService:
 
     def get_nfl_odds(self):
         nfl_events = []
-        r = requests.get(f'https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
             print('Used requests', r.headers['x-requests-used'])
@@ -36,7 +36,7 @@ class OpenApiService:
 
     def get_nba_odds(self):
         nba_events = []
-        r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
 
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
@@ -53,7 +53,7 @@ class OpenApiService:
 
     def get_mma_odds(self):
         mma_events = []
-        url = f'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        url = f'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
         r = requests.get(url)
 
         if r.status_code == 200:

@@ -58,6 +58,48 @@
 
     <div style="text-align: center">
         <h2>Betslips</h2>
+
+        <h3>Pending</h3>
+        {% for betslip in pending_betslips %}
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+          <div class="content">
+            <div class="header">{{ betslip.event }}</div>
+          </div>
+          <div class="content">
+            <div class="ui small feed">
+                <div class="event">
+                    <div class="content">
+                        <div class="summary" style="text-align: center">
+                            <p>Internal ID: {{ betslip.id }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="event">
+                    <div class="content">
+                        <div class="summary" style="text-align: center">
+                            <p>Type of Bet: {{ betslip.type_of_bet.title }}</p>
+                        </div>
+                    </div>
+                </div>
+              <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                     <p>Amount Wagered: {{ betslip.stake }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
         <h3>Wins</h3>
         {% for betslip in winning_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">

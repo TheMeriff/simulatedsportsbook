@@ -103,6 +103,7 @@ def account(request):
     else:
         winning_percent = None
     losing_tickets = processed_betslips.exclude(winning_ticket=True)
+    pending_betslips = user_betslips.filter(processed_ticket=False)
 
 
     largest_bet = 0
@@ -121,7 +122,8 @@ def account(request):
         'largest_bet': largest_bet,
         'winning_tickets': winning_tickets,
         'losing_tickets': losing_tickets,
-        'num_losing_tickets': losing_tickets.count()
+        'num_losing_tickets': losing_tickets.count(),
+        'pending_betslips': pending_betslips
     }
 
     return render(request, 'account.html', context=context)
