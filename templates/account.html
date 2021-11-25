@@ -36,8 +36,8 @@
                 <hr>
                 <h5><a href="/">Place a Wager</a></h5>
                 <hr>
-                <h5><a href="/refresh_odds">Refresh Odds</a></h5>
-                <hr>
+{#                <h5><a href="/refresh_odds">Refresh Odds</a></h5>#}
+{#                <hr>#}
                 <h5><a href="/logout">Logout</a></h5>
             </div>
         </div>
@@ -54,6 +54,9 @@
                     <p>Processed Betslips: {{ num_processed_betslips }}</p>
                     <p>Winning Betslips: {{ num_winning_tickets }}</p>
                     <p>Win Percentage: {{ win_percent }}</p>
+                    {% if account.account_resets > 0 %}
+                        <p>Account Resets: {{ account.account_resets }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -61,8 +64,31 @@
     <br>
 
     <div style="text-align: center">
+        <hr>
+        <h2>Reset Account Balance</h2>
+        <div style="color: red;">
+            {% if messages %}
+                {% for message in messages %}
+                    <h2>------------------</h2>
+                    <h3>{{ message }}</h3>
+                    <h2>------------------</h2>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <h4>If you are out of money or close to it feel free to reset to the starting balance of 500.</h4>
+        <form style="text-align: center" method="post" enctype="multipart/form-data" id="account_reset" name="account_reset">
+            {% csrf_token %}
+            <div class="ui checked checkbox">
+            <input type="checkbox" value="account_reset_true" name="account_reset_true" id="account_reset_true">
+            <label style="color: red">Reset Account Balance.</label>
+            <br>
+            <button type="submit" id="account_reset" class="ui red basic button">Confirm Account Reset</button>
+        </div>
+        </form>
+        <br>
+        <br>
+        <hr>
         <h2>Betslips</h2>
-
         <h3>Pending</h3>
         {% for betslip in pending_betslips %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
@@ -92,6 +118,22 @@
                   </div>
                 </div>
               </div>
+
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
+                  </div>
+                </div>
+              </div>
+
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
+                  </div>
+                </div>
+              </div>
               <div class="event">
                 <div class="content">
                   <div class="summary" style="text-align: center">
@@ -103,7 +145,7 @@
           </div>
         </div>
         {% endfor %}
-
+        <hr>
         <h3>Wins</h3>
         {% for betslip in winning_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
@@ -133,6 +175,22 @@
                   </div>
                 </div>
               </div>
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
+                  </div>
+                </div>
+              </div>
+
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
+                  </div>
+                </div>
+              </div>
+
               <div class="event">
                 <div class="content">
                   <div class="summary" style="text-align: center">
@@ -159,6 +217,7 @@
         </div>
         {% endfor %}
         <br>
+        <hr>
         <h3>Losses</h3>
         {% for betslip in losing_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
@@ -188,6 +247,21 @@
                   </div>
                 </div>
               </div>
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
+                  </div>
+                </div>
+              </div>
+                <div class="event">
+                <div class="content">
+                  <div class="summary" style="text-align: center">
+                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
+                  </div>
+                </div>
+              </div>
+
               <div class="event">
                 <div class="content">
                   <div class="summary" style="text-align: center">

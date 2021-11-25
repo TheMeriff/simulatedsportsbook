@@ -1,3 +1,6 @@
+from datetime import datetime, timedelta
+from decimal import Decimal
+
 from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -7,38 +10,60 @@ from simulated_sportsbook.services.betslips import BetslipsService
 from simulated_sportsbook.services.odds_api_service import OpenApiService
 from simulated_sportsbook.services.results_service import ResultsService
 from users.models import Account, AccountAdjustments
+from users.services.user_account_service import UserAccountService
 
 
 def index(request):
+    if request.user.is_anonymous:
+        return redirect("/login/")
     if request.method == 'POST':
         try:
-            events = Event.objects.all()
+            events = Event.objects.all().exclude(completed=True)
             for event in events:
                 if request.POST.get(event.external_id):
                     data = {}
                     user_account = Account.objects.get(user=request.user)
-                    data['account'] = user_account
-                    data['event'] = event
-                    data['type_of_bet'] = request.POST.get(event.external_id)
-                    data['predicted_outcome'] = request.POST.get(f'{event.external_id} | predicted_outcome')
-                    data['stake'] = request.POST.get(f'{event.external_id} | amount_wagered')
-                    BetslipsService().create_betslip(data)
-                    messages.success(request, f'Betslip Created Successfully!')
-                    return redirect('index')
-
+                    # Validate user balance for bet
+                    user_account_balance = user_account.current_balance
+                    wager = Decimal(request.POST.get(f'{event.external_id} | amount_wagered'))
+                    if Decimal(wager) <= user_account_balance:
+                        type_of_bet = request.POST.get(event.external_id)
+                        predicted_outcome = request.POST.get(f'{event.external_id} | predicted_outcome')
+                        data['account'] = user_account
+                        data['event'] = event
+                        data['type_of_bet'] = type_of_bet
+                        data['predicted_outcome'] = predicted_outcome
+                        if type_of_bet in ('money line', 'spread') and predicted_outcome in ('Over', 'Under'):
+                            messages.error(request, f'You are not allowed to bet {predicted_outcome} on {type_of_bet.title()}.')
+                            return redirect('index')
+                        data['stake'] = wager
+                        BetslipsService().create_betslip(data)
+                        messages.success(request, f'Betslip Created Successfully!')
+                        return redirect('index')
+                    else:
+                        messages.error(request, f'Wager of {wager} exceeds your account balance of {user_account_balance}, Betslip was not created.')
+                        return redirect('index')
         except Exception as e:
             render(request, e)
     else:
-        if request.user.is_anonymous:
-            return redirect("login")
+        now = datetime.utcnow() - timedelta(hours=6)
         house_account = Account.objects.get(id=1)
         house_balance = house_account.current_balance
         username = request.user.username
         user_account = Account.objects.get(user=request.user)
         current_balance = user_account.current_balance
-        nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True)
-        nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True)
-        mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True)
+        nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        leaderboard_data = Account.objects.all().order_by('-current_balance')
+        leaderboard = {}
+        for player in leaderboard_data:
+            pending_bets = Betslip.objects.filter(user_account=player).exclude(processed_ticket=True)
+            leaderboard[player.user.username.title()] = {
+                'current_balance': player.current_balance,
+                'pending_bets': pending_bets.count(),
+                'username': player.user.username.title()
+            }
 
         context = {
             'account': user_account,
@@ -47,7 +72,8 @@ def index(request):
             'mma_events': mma_events,
             'username': username,
             'current_balance': current_balance,
-            'house_balance': house_balance
+            'house_balance': house_balance,
+            'leaderboard': leaderboard
         }
 
         return render(request, 'index.html', context=context)
@@ -105,7 +131,6 @@ def account(request):
     losing_tickets = processed_betslips.exclude(winning_ticket=True)
     pending_betslips = user_betslips.filter(processed_ticket=False)
 
-
     largest_bet = 0
     for bet in user_betslips:
         if bet.stake > largest_bet:
@@ -123,7 +148,24 @@ def account(request):
         'winning_tickets': winning_tickets,
         'losing_tickets': losing_tickets,
         'num_losing_tickets': losing_tickets.count(),
-        'pending_betslips': pending_betslips
+        'pending_betslips': pending_betslips,
     }
 
-    return render(request, 'account.html', context=context)
+    if request.method == 'POST':
+        account_reset = request.POST.get('account_reset_true')
+        if account_reset:
+            pending_betslips = Betslip.objects.filter(user_account__user=request.user)
+            if pending_betslips:
+                messages.error(request, 'You are not allowed to reset your balance while you still have pending betslips.')
+                return render(request, 'account.html', context=context)
+            UserAccountService().reset_account_balance(request.user)
+            messages.success(request, 'Account Balance reset to 500')
+            return render(request, 'account.html', context=context)
+        else:
+            messages.error(request, 'Check the box if you and hit the red button if you want to reset your account.')
+            return render(request, 'account.html', context=context)
+    else:
+        if request.user.is_anonymous:
+            return redirect("/login/")
+
+        return render(request, 'account.html', context=context)

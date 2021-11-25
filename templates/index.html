@@ -38,8 +38,8 @@
                 <hr>
                 <h5><a href="/">Place a Wager</a></h5>
                 <hr>
-                <h5><a href="/refresh_odds">Refresh Odds</a></h5>
-                <hr>
+{#                <h5><a href="/refresh_odds">Refresh Odds</a></h5>#}
+{#                <hr>#}
                 <h5><a href="/logout">Logout</a></h5>
             </div>
         </div>
@@ -175,7 +175,28 @@
             </div>
         {% endfor %}
         </div>
-</div>
+    </div>
+    <br>
+    <br>
+
+    <div class="ui card" style="text-align: center; width: 30%; margin: 0 auto; align-content: center">
+      <div class="content">
+        <div class="header" style="text-align: center">Site Leaderboard</div>
+      </div>
+      <div class="content">
+        <div class="ui small feed">
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+              <h5>Username | Current Account Balance | Pending Bets</h5>
+                  {% for key, value in leaderboard.items %}
+                      <p>{{ key }} | {{ value.current_balance }} | {{ value.pending_bets }}</p>
+                  {% endfor %}
+              </div>
+            </div>
+          </div>
+
+    </div>
 
 </body>
 <script>
