@@ -8,8 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <style>
         .collapse {
-            background-color: black;
-            color: white;
+            background-color: #1F2833;
+            color: #C5C6C7;
             cursor: pointer;
             padding: 18px;
             width: 100%;
@@ -19,11 +19,11 @@
             font-size: 15px;
     }
         .collapse-content {
-            color: white;
+            color: #C5C6C7;
             padding: 0 18px;
             display: none;
             overflow: hidden;
-            background-color: black
+            background-color: #0B0C10
     }
     </style>
 </head>
@@ -44,17 +44,26 @@
     </nav>
     <br>
     <div class="ui cards" style="text-align: center; width: 50%; margin: 0 auto; align-content: center">
-        <div class="card" style="width: 50%; margin: 0 auto;">
+        <div class="card" style="width: 50%; margin: 0 auto; background-color: #C5C6C7">
             <div class="content">
-                <div class="header">{{ username }}</div>
+                <div class="header" style="color: #1f2833">{{ username.title }}</div>
                 <div class="description">
                     <h3>Current Balance: {{ account.current_balance }}</h3>
-                    <p>Starting Balance: {{ account.starting_balance }}</p>
-                    <p>Total Betslips: {{ total_betslips }}</p>
-                    <p>Processed Betslips: {{ num_processed_betslips }}</p>
-                    <p>Winning Betslips: {{ num_winning_tickets }}</p>
+                    <hr>
+                    <h4>Wagers</h4>
+                    <p>Pending: {{ num_pending_betslips }}</p>
+                    <p>Processed: {{ num_processed_betslips }}</p>
+                    <p>Total: {{ total_betslips }}</p>
+                    <hr>
+                    <h4>Player stats</h4>
+                    <p>Record: {{ num_winning_tickets }}/{{ num_processed_betslips }}</p>
+                    <p style="color: darkgreen">Wins: {{ num_winning_tickets }}</p>
+                    <p style="color: darkred">Losses: {{ num_losing_tickets }}</p>
                     <p>Win Percentage: {{ win_percent }}</p>
+                    <p>Starting Balance: {{ account.starting_balance }}</p>
+                    <p>Largest Bet: {{ largest_bet }}</p>
                     {% if account.account_resets > 0 %}
+                        <hr>
                         <p>Account Resets: {{ account.account_resets }}</p>
                     {% endif %}
                 </div>
@@ -91,7 +100,7 @@
         <h2>Betslips</h2>
         <h3>Pending</h3>
         {% for betslip in pending_betslips %}
-        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7";>
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
           </div>
@@ -148,7 +157,7 @@
         <hr>
         <h3>Wins</h3>
         {% for betslip in winning_tickets %}
-        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
           </div>
@@ -220,7 +229,7 @@
         <hr>
         <h3>Losses</h3>
         {% for betslip in losing_tickets %}
-        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
           </div>
@@ -274,12 +283,12 @@
         </div>
         {% endfor %}
     </div>
-    <br>
+    <hr>
     <br>
     <div style="text-align: center">
         <h2>Account Adjustments</h2>
         {% for adjustment in adjustments %}
-        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem">
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ adjustment.notes }}</div>
           </div>

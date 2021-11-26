@@ -60,4 +60,4 @@ class Betslip(models.Model):
     processed_ticket = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'id: {self.id} | {self.type_of_bet} | {self.predicted_outcome} | Steak: {self.stake}'
+        return f'id: {self.id} | {self.type_of_bet} | {self.predicted_outcome} | Stake: {self.stake}'

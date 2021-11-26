@@ -64,6 +64,21 @@ def index(request):
                 'pending_bets': pending_bets.count(),
                 'username': player.user.username.title()
             }
+        user_betslips = Betslip.objects.filter(user_account=user_account)
+        total_betslips = len(user_betslips)
+        processed_betslips = user_betslips.exclude(processed_ticket=False)
+        winning_tickets = processed_betslips.filter(winning_ticket=True)
+        if winning_tickets and processed_betslips:
+            winning_percent = winning_tickets.count() / processed_betslips.count()
+        else:
+            winning_percent = None
+        losing_tickets = processed_betslips.exclude(winning_ticket=True)
+        pending_betslips = user_betslips.filter(processed_ticket=False)
+
+        largest_bet = 0
+        for bet in user_betslips:
+            if bet.stake > largest_bet:
+                largest_bet = bet.stake
 
         context = {
             'account': user_account,
@@ -73,7 +88,14 @@ def index(request):
             'username': username,
             'current_balance': current_balance,
             'house_balance': house_balance,
-            'leaderboard': leaderboard
+            'leaderboard': leaderboard,
+            'total_betslips': total_betslips or 0,
+            'processed_betslips': len(processed_betslips) if processed_betslips else None,
+            'pending_betslips': len(pending_betslips) if pending_betslips else 'None',
+            'winning_percent': winning_percent * 100 if winning_tickets else 'Not available yet.',
+            'winning_tickets': len(winning_tickets) if winning_tickets else None,
+            'losing_tickets': len(losing_tickets) if losing_tickets else None,
+            'largest_bet': largest_bet,
         }
 
         return render(request, 'index.html', context=context)
@@ -129,6 +151,7 @@ def account(request):
     else:
         winning_percent = None
     losing_tickets = processed_betslips.exclude(winning_ticket=True)
+    num_losing_tickets = losing_tickets.count()
     pending_betslips = user_betslips.filter(processed_ticket=False)
 
     largest_bet = 0
@@ -145,10 +168,11 @@ def account(request):
         'num_winning_tickets': len(winning_tickets) if winning_percent else 0,
         'win_percent': winning_percent * 100 if winning_percent else 'Not Available',
         'largest_bet': largest_bet,
-        'winning_tickets': winning_tickets,
         'losing_tickets': losing_tickets,
-        'num_losing_tickets': losing_tickets.count(),
-        'pending_betslips': pending_betslips,
+        'winning_tickets': winning_tickets,
+        'num_losing_tickets': str(num_losing_tickets),
+        'num_pending_betslips': str(len(pending_betslips)) if pending_betslips else None,
+        'pending_betslips': pending_betslips
     }
 
     if request.method == 'POST':
