@@ -76,15 +76,15 @@ class BetslipsService:
         account = betslip.user_account
         type_of_bet = betslip.type_of_bet
         stake = betslip.stake
+        event_winning_team = None
+        game_difference = None
 
         if event.completed:
             # Who covered the spread?
             home_point_spread = event.spread_home_team_points
             away_point_spread = event.spread_away_team_points
-            away_team_points_scored = event.home_team_points_scored
+            away_team_points_scored = event.away_team_points_scored
             home_team_points_scored = event.home_team_points_scored
-            home_team_difference = home_team_points_scored - home_point_spread
-            away_team_difference = away_team_points_scored - away_point_spread
 
             # If this statement results in a positive number then the home team scored more and there for won.
             if event.home_team_points_scored - event.away_team_points_scored > 0:
@@ -155,10 +155,10 @@ class BetslipsService:
                     # Did they cover?
                     cover = False
                     if home_point_spread == matched_spread_points:
-                        if home_team_difference > matched_spread_points:
+                        if home_team_points_scored + home_point_spread >= away_team_points_scored:
                             cover = True
                     elif away_point_spread == matched_spread_points:
-                        if away_team_difference > matched_spread_points:
+                        if away_team_points_scored + away_point_spread >= home_team_points_scored:
                             cover = True
 
                     if cover:
