@@ -5,8 +5,8 @@ from django.db import models
 # Create your models here.
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='user')
-    starting_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, default=500.00)
-    current_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=500.00)
+    starting_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, default=1000.00)
+    current_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=1000.00)
     account_resets = models.IntegerField(default=0)
 
     def __str__(self):
