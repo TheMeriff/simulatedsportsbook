@@ -55,7 +55,7 @@ def index(request):
         nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
-        custom_events = Event.objects.filter(sport=Event.CUSTOM).order_by('start_time').exclude(completed=True)
+        custom_events = Event.objects.filter(sport=Event.CUSTOM).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         leaderboard_data = Account.objects.all().order_by('-current_balance')
         leaderboard = {}
         for player in leaderboard_data:
