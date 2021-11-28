@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
-    <title style="color: #66FCF1">Practice Sportsbook</title>
+    <title style="color: #50c878">Practice Sportsbook</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <style>
         .collapse {
-            background-color: #1F2833;
-            color: #C5C6C7;
+            background-color: #50c878;
+            color: black;
             cursor: pointer;
             padding: 18px;
             width: 100%;
@@ -19,7 +19,7 @@
             font-size: 15px;
     }
         .collapse-content {
-            color: #C5C6C7;
+            color: #b3b3b3;
             padding: 0 18px;
             display: none;
             overflow: hidden;
@@ -27,20 +27,21 @@
     }
     </style>
 </head>
+{% load static %}
 <body style="background-color: #202124; color: #C5C6C7">
 <div style="text-align: center">
-
+    <img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto">
     <nav>
         <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Menu</button>
         <div class="collapse-content" style="text-align: center">
             <div class="collapse" style="text-align: center">
-                <h5><a href="/account">Account/Betslip stats</a></h5>
+                <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
                 <hr>
-                <h5><a href="/">Place a Wager</a></h5>
+                <h5><a style="color: black" href="/">Place a Wager</a></h5>
                 <hr>
 {#                <h5><a href="/refresh_odds">Refresh Odds</a></h5>#}
 {#                <hr>#}
-                <h5><a href="/logout">Logout</a></h5>
+                <h5><a style="color: black" href="/logout">Logout</a></h5>
             </div>
         </div>
     </nav>
@@ -83,34 +84,14 @@
         </div>
     </div>
     <br>
-    <div class="ui card" style="text-align: center; margin: 0 auto; align-content: center; background-color: #C5C6C7">
-      <div class="content">
-        <div class="header" style="text-align: center">Site Leaderboard</div>
-      </div>
-      <div class="content">
-        <div class="ui small feed">
-          <div class="event">
-            <div class="content">
-              <div class="summary" style="text-align: center">
-              <h5>Username | Current Account Balance | Pending Bets</h5>
-                  {% for key, value in leaderboard.items %}
-                      <p>{{ key }} | {{ value.current_balance }} | {{ value.pending_bets }}</p>
-                  {% endfor %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <br>
     <hr>
     <h4>NFL, and NBA lines.</h4>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
         <div class="collapse-content" style="text-align: center">
             {% for event in nba_events %}
-            <div class="ui message" style="background-color: #202124">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #5C5F58" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center">
+            <div class="ui message" style="background-color: #1f2833">
+                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
                     <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
                     <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
                     <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
@@ -145,6 +126,7 @@
                             <br>
                             <br>
                             <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
+                            <br>
                         </form>
                     </div>
                 </div>
@@ -158,9 +140,9 @@
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
             {% for event in nfl_events %}
-            <div class="ui message" style="background-color: #202124">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #5C5F58" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center">
+            <div class="ui message" style="background-color: #1f2833">
+                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
                     <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
                     <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
                     <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
@@ -205,9 +187,9 @@
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>
         <div class="collapse-content" style="text-align: center">
             {% for event in mma_events %}
-            <div class="ui message" style="background-color: #202124">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #5C5F58" id="mma_fight">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center">
+            <div class="ui message" style="background-color: #1F2833">
+                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="mma_fight">{{ event }}</button>
+                <div class="collapse-content" style="text-align: center#c5c6c7">
                     <p>{{ event.home_team}} | Money Line: {{ event.home_team_money_line_price }}</p>
                     <p>{{ event.away_team}} | Money Line: {{ event.away_team_money_line_price }}</p>
                 </div>
@@ -266,7 +248,29 @@
         {% endif %}
     </div>
     <br>
+    <hr>
     <br>
+    <div class="ui card" style="text-align: center; margin: 0 auto; align-content: center; background-color: #C5C6C7">
+      <div class="content">
+        <div class="header" style="text-align: center">Site Leaderboard</div>
+      </div>
+      <div class="content">
+        <div class="ui small feed">
+          <div class="event">
+            <div class="content">
+              <div class="summary" style="text-align: center">
+              <h5>Username | Current Account Balance | Pending Bets</h5>
+                  {% for key, value in leaderboard.items %}
+                      <p>{{ key }} | {{ value.current_balance }} | {{ value.pending_bets }}</p>
+                  {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br>
+
 </body>
 <script>
 {# show/hide warehouse nested rows #}

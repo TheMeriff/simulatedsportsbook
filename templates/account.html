@@ -8,8 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <style>
         .collapse {
-            background-color: #1F2833;
-            color: #C5C6C7;
+            background-color: #50c878;
+            color: black;
             cursor: pointer;
             padding: 18px;
             width: 100%;
@@ -19,7 +19,7 @@
             font-size: 15px;
     }
         .collapse-content {
-            color: #C5C6C7;
+            color: #b3b3b3;
             padding: 0 18px;
             display: none;
             overflow: hidden;
@@ -28,17 +28,21 @@
     </style>
 </head>
 <body style="background-color: #202124; color: white">
+{% load static %}
+<div style="text-align: center">
+    <a href="/" style="align-content: center; margin: 0 auto"><img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto"></a>
+</div>
     <nav>
         <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Menu</button>
         <div class="collapse-content" style="text-align: center">
             <div class="collapse" style="text-align: center">
-                <h5><a href="/account">Account/Betslip stats</a></h5>
+                <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
                 <hr>
-                <h5><a href="/">Place a Wager</a></h5>
+                <h5><a style="color: black" href="/">Place a Wager</a></h5>
                 <hr>
 {#                <h5><a href="/refresh_odds">Refresh Odds</a></h5>#}
 {#                <hr>#}
-                <h5><a href="/logout">Logout</a></h5>
+                <h5><a style="color: black" href="/logout">Logout</a></h5>
             </div>
         </div>
     </nav>

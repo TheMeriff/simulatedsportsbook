@@ -4,9 +4,13 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
 </head>
+{% load static %}
 <body style="background-color: black">
     <div style="background-color: black; color: white; text-align: center">
         <h2>Practice SportsBook Registration</h2>
+        <img src="{% static 'logo1.jpg' %}" alt="logo1" width="300px" height="auto">
+        <br>
+        <br>
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
