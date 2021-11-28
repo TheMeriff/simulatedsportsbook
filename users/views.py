@@ -27,7 +27,8 @@ def register(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
-            UserAccountService.create_account_association(username)
+            email_address = form.data.get('email_address')
+            UserAccountService.create_account_association(username, email_address)
             messages.success(request, f'User account added for {username}.')
             login(request, User.objects.get(username=username))
             return redirect('index')

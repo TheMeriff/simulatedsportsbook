@@ -8,9 +8,13 @@ class UserAccountService():
         pass
 
     @staticmethod
-    def create_account_association(username):
+    def create_account_association(username, email_address=None):
         user = User.objects.get(username=username)
         user_account = Account.objects.create(user=user)
+
+        if email_address:
+            user.email = email_address
+            user.save()
         
         return user_account
 

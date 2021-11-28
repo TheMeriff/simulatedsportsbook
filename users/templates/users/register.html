@@ -5,18 +5,30 @@
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
 </head>
 {% load static %}
-<body style="background-color: black">
-    <div style="background-color: black; color: white; text-align: center">
-        <h2>Practice SportsBook Registration</h2>
+<body style="background-color: #202124; color: #C5C6C7">
+    <div style="text-align: center">
         <img src="{% static 'logo1.jpg' %}" alt="logo1" width="300px" height="auto">
         <br>
         <br>
-        <form method="POST">
+        <h2>Registration Form</h2>
+        <form method="POST" autocomplete="off">
             {% csrf_token %}
-            <fieldset class="form-group">
-                {{ form.as_p }}
-            </fieldset>
+            <h2 style="color: red">{{ form.errors }}</h2>
+            <h3>Password rules:</h3>
+            <p>1. Your password must contain at least 8 characters.</p>
+            <p>2. Your password can’t be a commonly used password.</p>
+            <p>3. Your password can't be entirely numeric</p>
+            <h4>User Name:</h4>
+            {{ form.username }}
+            <h4 for="email_address">Email Address</h4>
+            <input name="email_address" autocomplete="off" id="email_address">
+            <h4>Password:</h4>
+            {{ form.password1 }}
+            <h4>Confirm Password:</h4>
+            {{ form.password2 }}
+
             <div>
+                <br>
                 <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
             </div>
         </form>
