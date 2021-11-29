@@ -58,7 +58,7 @@ def index(request):
         custom_events = Event.objects.filter(sport=Event.CUSTOM).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         leaderboard_data = Account.objects.all().order_by('-current_balance')
         leaderboard = {}
-        for player in leaderboard_data:
+        for player in leaderboard_data[:5]:
             pending_bets = Betslip.objects.filter(user_account=player).exclude(processed_ticket=True)
             leaderboard[player.user.username.title()] = {
                 'current_balance': player.current_balance,
@@ -98,6 +98,7 @@ def index(request):
             'winning_tickets': len(winning_tickets) if winning_tickets else None,
             'losing_tickets': len(losing_tickets) if losing_tickets else None,
             'largest_bet': largest_bet,
+            'num_total_users': leaderboard_data.count()
         }
 
         return render(request, 'index.html', context=context)

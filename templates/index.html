@@ -1,10 +1,12 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <title style="color: #50c878">Practice Sportsbook</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-83ERWGQM8X"></script>
@@ -36,7 +38,6 @@
     }
     </style>
 </head>
-{% load static %}
 <body style="background-color: #202124; color: #C5C6C7">
 <div style="text-align: center">
     <img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto">
@@ -97,6 +98,7 @@
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
         <div class="collapse-content" style="text-align: center">
+        <br>
             {% for event in nba_events %}
             <div class="ui message" style="background-color: #1f2833">
                 <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
@@ -148,6 +150,7 @@
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
+        <br>
             {% for event in nfl_events %}
             <div class="ui message" style="background-color: #1f2833">
                 <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
@@ -189,21 +192,24 @@
                 </div>
             </div>
         {% endfor %}
+        <br>
         </div>
     <br>
     <hr>
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>
         <div class="collapse-content" style="text-align: center">
+        <br>
             {% for event in mma_events %}
             <div class="ui message" style="background-color: #1F2833">
                 <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="mma_fight">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center#c5c6c7">
+                <div class="collapse-content" style="text-align: center; color: #c5c6c7">
                     <p>{{ event.home_team}} | Money Line: {{ event.home_team_money_line_price }}</p>
                     <p>{{ event.away_team}} | Money Line: {{ event.away_team_money_line_price }}</p>
                 </div>
             </div>
         {% endfor %}
+        <br>
         </div>
 
         {% if custom_events %}
@@ -261,7 +267,9 @@
     <br>
     <div class="ui card" style="text-align: center; margin: 0 auto; align-content: center; background-color: #C5C6C7">
       <div class="content">
-        <div class="header" style="text-align: center">Site Leaderboard</div>
+          <div class="header" style="text-align: center">Leaderboard</div>
+          <br>
+        <div class="header" style="text-align: center">Top 5 bankrolls out of {{ num_total_users }} Accounts.</div>
       </div>
       <div class="content">
         <div class="ui small feed">
