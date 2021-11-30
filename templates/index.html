@@ -18,6 +18,9 @@
       gtag('config', 'G-83ERWGQM8X');
     </script>
     <style>
+        img {
+            border-radius: 50%;
+        }
         .collapse {
             background-color: #50c878;
             color: black;
@@ -79,7 +82,7 @@
                     <p>Total: {{ total_betslips }}</p>
                     <hr>
                     <h4>Player Stats</h4>
-                    <p>Record: {{ winning_tickets }}/{{ processed_betslips }}</p>
+                    <p>Record: {{ num_winning_tickets }}/{{ num_processed_betslips }}</p>
                     <p style="color: darkgreen">Wins: {{ winning_tickets }}</p>
                     <p style="color: darkred">Losses: {{ losing_tickets }}</p>
                     <p>Win Percentage: {{ winning_percent }}</p>
@@ -269,7 +272,7 @@
       <div class="content">
           <div class="header" style="text-align: center">Leaderboard</div>
           <br>
-        <div class="header" style="text-align: center">Top 5 bankrolls out of {{ num_total_users }} Accounts.</div>
+        <div class="header" style="text-align: center">Top 5 high rollers out of {{ num_total_users }} Accounts.</div>
       </div>
       <div class="content">
         <div class="ui small feed">

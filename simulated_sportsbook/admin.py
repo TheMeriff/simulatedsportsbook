@@ -18,8 +18,8 @@ class EventAdmin(admin.ModelAdmin):
         'home_team_points_scored', 'completed'
     ]
     list_filter = ['sport', 'start_time', 'external_sportsbook', 'completed']
-    ordering = ['sport', 'home_team', 'away_team', 'away_team_points_scored', 'home_team_points_scored']
-    search_fields = ['home_team', 'away_team']
+    ordering = ['-id']
+    search_fields = ['sport', 'home_team', 'away_team']
     filter_horizontal = ()
     fieldsets = ()
 
@@ -33,7 +33,7 @@ class BetslipAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
                     'winning_ticket', 'processed_ticket']
     list_filter = ['type_of_bet', 'winning_ticket', 'processed_ticket']
-    ordering = ['user_account', 'event', 'stake', 'total_return', 'profit', 'winning_ticket']
+    ordering = ['-id']
     search_fields = ['user_account', 'event']
 
 

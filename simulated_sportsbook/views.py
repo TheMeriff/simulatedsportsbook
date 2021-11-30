@@ -93,9 +93,11 @@ def index(request):
             'leaderboard': leaderboard,
             'total_betslips': total_betslips or 0,
             'processed_betslips': len(processed_betslips) if processed_betslips else None,
-            'pending_betslips': len(pending_betslips) if pending_betslips else 'None',
+            'num_processed_betslips': len(processed_betslips) if processed_betslips else '0',
+            'pending_betslips': len(pending_betslips) if pending_betslips else None,
             'winning_percent': winning_percent * 100 if winning_tickets else 'Not available yet.',
             'winning_tickets': len(winning_tickets) if winning_tickets else None,
+            'num_winning_tickets': len(winning_tickets) if winning_tickets else '0',
             'losing_tickets': len(losing_tickets) if losing_tickets else None,
             'largest_bet': largest_bet,
             'num_total_users': leaderboard_data.count()
