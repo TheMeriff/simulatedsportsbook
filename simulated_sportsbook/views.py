@@ -140,6 +140,10 @@ def refresh_odds(request):
     return render(request, 'refresh_odds.html', context=context)
 
 
+def about_us(request):
+    return render(request, 'about_us.html')
+
+
 def account(request):
     if request.user.is_anonymous:
         return redirect("/login/")

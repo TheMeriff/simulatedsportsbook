@@ -1,0 +1,82 @@
+{% load static %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-83ERWGQM8X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-83ERWGQM8X');
+    </script>
+    <style>
+        img {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body style="background-color: #202124; color: #C5C6C7">
+    <div style="text-align: center; margin: 0 auto">
+        <a href="/register" style="align-content: center; margin: 0 auto"><img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto"></a>
+        <br>
+        <br>
+        <h2>About Us</h2>
+        <br>
+        <h4>Mission Statement:</h4>
+        <p>Our goal is to provide an environment where you can learn how sports gambling works without having to put up any real money. We import games from the NFL and NBA every day complete with the Money Line (h2h), Spread, and Over Under. Then the following day we update these events with the box score from the previous evening. At this point we are able to process any pending bet slips and provide you with real life outcomes to track your success.</p>
+        <br>
+        <hr>
+        <br>
+        <h4>FAQs</h4>
+        <p>Q: Is this Legal?</p>
+        <p>A: Yes, This is purely a simulation the credits that start in your account are fake play money. The sole purpose of that money is to track the profit/loss of betslips based on your wager in an event.</p>
+        <br>
+        <br>
+        <p>Q: What time zone are the games in?</p>
+        <p>A: Central Standard Time (We are working on a front end update to offset the start time of the event to your local time zone.) </p>
+        <br>
+        <br>
+        <p>Q: When does the system update and process bet slips?</p>
+        <p>A: Times below are in CST</p>
+        <div class="ui bulleted list">
+            <div class="item">3:40 AM Update NBA Results from the previous day.</div>
+              <div class="item">3:45 AM Update NBA Lines for the current day.</div>
+              <div class="item">3:50 AM Update NFL Results from the previous day.</div>
+              <div class="item">3:55 AM Update NFL Lines for the day.</div>
+              <div class="item">4:00 AM Process existing betslips from the previous day.</div>
+        </div>
+        <br>
+        <br>
+        <p>Q: How long will a game be posted?</p>
+        <p>A: Once we import an event it will be available until its start time. At that point all betting is closed and the event is taken off the list of available games.</p>
+        <br>
+        <br>
+        <p>Q: What happens if I think I wasn't paid out correctly?</p>
+        <p>A: Just let us know over on our <a href="https://discord.gg/xWTTPMqupe">Discord Server</a> or <a href="https://t.me/practicesportsbook">Telegram Group</a>, and we will have a moderator look into your issue. This platform is still in early access and we are happy to correct any issues with the system.</p>
+        <br>
+        <hr>
+        <br>
+        <h4>Disclaimers</h4>
+        <br>
+        <div class="ui bulleted list">
+            <div class="item">We are very much in alpha testing mode right now. We appreciate everyone for signing up early and helping us build this site. If you come across anything that doesn't function as expected please let us know in the <a href="https://discord.gg/xWTTPMqupe">Discord Server</a> or <a href="https://t.me/practicesportsbook">Telegram Group</a>.</div>
+              <div class="item">We know the site looks like pretty rough. We are currently looking into front end frameworks to create an overall more pleasing user experience. </div>
+              <div class="item">At this time the site is formatted primarily for mobile. The desktop browser version works fine, but isn't recommended.</div>
+              <div class="item">Currently when an event is created the Money Line, Spread, and Over Under are locked in. In the near future we will update odds every few hours but for now its normally about once a day when the event gets pulled in at about 5am EST.</div>
+        </div>
+        <div>
+            <div>
+                <hr>
+                <h4><a href="/register">Register for an account</a></h4>
+                <br>
+            </div>
+        </div>
+    </div>
+</body>
+
+

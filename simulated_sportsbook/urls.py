@@ -24,6 +24,7 @@ from simulated_sportsbook import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('refresh_odds/', views.refresh_odds, name='refresh_odds'),
+    path('about_us/', views.about_us, name='about_us'),
     path('account/', views.account, name='account'),
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name='register'),
