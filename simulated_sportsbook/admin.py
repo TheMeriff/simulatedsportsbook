@@ -29,7 +29,7 @@ class BetslipAdmin(admin.ModelAdmin):
     fields = ['user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
               'winning_ticket', 'processed_ticket']
     readonly_fields = ['user_account', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
-              'winning_ticket', 'processed_ticket']
+              'winning_ticket', 'processed_ticket', 'type_of_bet']
     list_display = ['id', 'user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
                     'winning_ticket', 'processed_ticket']
     list_filter = ['type_of_bet', 'winning_ticket', 'processed_ticket']
@@ -39,11 +39,11 @@ class BetslipAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    fields = ['user', 'current_balance', 'starting_balance']
-    readonly_fields = ['user', 'current_balance']
-    list_display = ['id', 'user', 'current_balance']
-    list_filter = ['user', 'current_balance']
-    ordering = []
+    fields = ['user', 'current_balance', 'starting_balance', 'account_resets']
+    readonly_fields = ['user', 'current_balance', 'account_resets']
+    list_display = ['id', 'user', 'current_balance', 'account_resets']
+    list_filter = ['user', 'current_balance', 'account_resets']
+    ordering = ['id']
     search_fields = ['user', 'current_balance']
     fieldsets = []
 
@@ -51,7 +51,8 @@ class AccountAdmin(admin.ModelAdmin):
 @admin.register(AccountAdjustments)
 class AccountAdjustmentsAdmin(admin.ModelAdmin):
     fields = ['user_account', 'previous_balance', 'new_balance', 'amount_adjusted', 'notes']
-    readonly_fields = ['user_account', 'previous_balance', 'new_balance', 'amount_adjusted']
+    readonly_fields = ['user_account', 'previous_balance', 'new_balance', 'amount_adjusted', 'notes']
+    list_display = ['id', 'new_balance', 'user_account']
     list_filter = []
     ordering = []
     search_fields = ['user_account']
