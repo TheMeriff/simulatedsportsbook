@@ -1,6 +1,9 @@
+<!DOCTYPE html>
 {% load static %}
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
+    <title style="color: #50c878">Practice Sportsbook</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
@@ -18,13 +21,44 @@
         img {
             border-radius: 50%;
         }
+        .collapse {
+            background-color: #50c878;
+            color: black;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+    }
+        .collapse-content {
+            color: #b3b3b3;
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #0B0C10
+    }
     </style>
 </head>
 <body style="background-color: #202124; color: #C5C6C7">
+
     <div style="text-align: center; margin: 0 auto">
-        <a href="/register" style="align-content: center; margin: 0 auto"><img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto"></a>
-        <br>
-        <br>
+        <a href="/" style="align-content: center; margin: 0 auto"><img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto"></a>
+        <nav>
+            <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Menu</button>
+            <div class="collapse-content" style="text-align: center">
+                <div class="collapse" style="text-align: center">
+                    <h5><a style="color: black" href="/register">Register</a></h5>
+                    <hr>
+                    <h5><a style="color: black" href="/login">Login</a></h5>
+                    <hr>
+                    <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
+                    <hr>
+                    <h5><a style="color: black" href="/">Place a Wager</a></h5>
+                </div>
+            </div>
+        </nav>
         <h2>About Us</h2>
         <br>
         <h4>Mission Statement:</h4>
@@ -80,3 +114,19 @@
 </body>
 
 
+<script>
+{# show/hide warehouse nested rows #}
+    let coll = document.getElementsByClassName("collapse");
+    for (let i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            console.log(this)
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
+</script>
