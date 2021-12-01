@@ -25,8 +25,8 @@ def index(request):
                     user_account = Account.objects.get(user=request.user)
                     # Validate user balance for bet
                     user_account_balance = user_account.current_balance
-                    wager = Decimal(request.POST.get(f'{event.external_id} | amount_wagered'))
-                    if Decimal(wager) <= user_account_balance:
+                    wager = request.POST.get(f'{event.external_id} | amount_wagered')
+                    if Decimal(str(wager)) <= user_account_balance:
                         type_of_bet = request.POST.get(event.external_id)
                         predicted_outcome = request.POST.get(f'{event.external_id} | predicted_outcome')
                         data['account'] = user_account
@@ -36,7 +36,7 @@ def index(request):
                         if type_of_bet in ('money line', 'spread') and predicted_outcome in ('Over', 'Under'):
                             messages.error(request, f'You are not allowed to bet {predicted_outcome} on {type_of_bet.title()}.')
                             return redirect('index')
-                        data['stake'] = wager
+                        data['stake'] = str(wager)
                         BetslipsService().create_betslip(data)
                         messages.success(request, f'Betslip Created Successfully!')
                         return redirect('index')
@@ -55,6 +55,7 @@ def index(request):
         nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        nhl_events = Event.objects.filter(sport=Event.NHL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         custom_events = Event.objects.filter(sport=Event.CUSTOM).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         leaderboard_data = Account.objects.all().order_by('-current_balance')
         leaderboard = {}
@@ -85,7 +86,8 @@ def index(request):
             'account': user_account,
             'nba_events': nba_events,
             'nfl_events': nfl_events,
-            'mma_events': mma_events,
+            # 'mma_events': mma_events,
+            'nhl_events': nhl_events,
             'custom_events': custom_events,
             'username': username,
             'current_balance': current_balance,
@@ -113,11 +115,15 @@ def refresh_odds(request):
     nba_events = None
     nfl_events = None
     mma_events = None
+    nhl_events = None
+    ncaa_basketball_events = None
     if request.method == 'POST':
         try:
             nba_refresh = request.POST.get('nba_refresh')
             nfl_refresh = request.POST.get('nfl_refresh')
             mma_refresh = request.POST.get('mma_refresh')
+            nhl_refresh = request.POST.get('nhl_refresh')
+            ncaa_basketball_refresh = request.POST.get('ncaa_basketball_refresh')
             process_betslips = request.POST.get('process_betslips')
             if nba_refresh == 'on':
                 # Pull in new odds
@@ -129,11 +135,22 @@ def refresh_odds(request):
                 ResultsService.process_nfl_events()
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
+            if nhl_refresh == 'on':
+                # nhl_events = OpenApiService().get_nhl_odds()
+                ResultsService.process_nhl_events()
+            # if ncaa_basketball_refresh == 'on':
+            #     # ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
+            #     ResultsService.process_ncaab_events()
             if process_betslips == 'on':
                 betslips = Betslip.objects.all().exclude(processed_ticket=True)
                 for betslip in betslips:
                     BetslipsService().process_betslip(betslip)
-            context = {'nba_events': nba_events, 'nfl_events': nfl_events, 'mma_events': mma_events}
+            context = {
+                'nba_events': nba_events,
+                'nfl_events': nfl_events,
+                'mma_events': mma_events,
+                'nhl_events': nhl_events
+            }
         except Exception as e:
             return HttpResponse(e)
 

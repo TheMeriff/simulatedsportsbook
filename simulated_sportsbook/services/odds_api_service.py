@@ -20,7 +20,7 @@ class OpenApiService:
 
     def get_nfl_odds(self):
         nfl_events = []
-        r = requests.get(f'https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
             print('Used requests', r.headers['x-requests-used'])
@@ -36,7 +36,7 @@ class OpenApiService:
 
     def get_nba_odds(self):
         nba_events = []
-        r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
 
         if r.status_code == 200:
             print('Remaining requests', r.headers['x-requests-remaining'])
@@ -54,7 +54,7 @@ class OpenApiService:
 
     def get_mma_odds(self):
         mma_events = []
-        url = f'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey={self.api_keys[1]}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        url = f'https://api.the-odds-api.com/v4/sports/mma_mixed_martial_arts/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
         r = requests.get(url)
 
         if r.status_code == 200:
@@ -67,6 +67,42 @@ class OpenApiService:
                     game = self.create_event(event, sport=Event.MMA)
                     mma_events.append(game)
             return mma_events
+        else:
+            print(f"{r.status_code} | {r.reason}")
+
+    def get_nhl_odds(self):
+        nhl_events = []
+        url = f'https://api.the-odds-api.com/v4/sports/icehockey_nhl/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        r = requests.get(url)
+
+        if r.status_code == 200:
+            print('Remaining requests', r.headers['x-requests-remaining'])
+            print('Used requests', r.headers['x-requests-used'])
+            event_records = r.json()
+            for event in event_records:
+                external_event_id = event['id']
+                if external_event_id not in self.existing_event_map:
+                    game = self.create_event(event, sport=Event.NHL)
+                    nhl_events.append(game)
+            return nhl_events
+        else:
+            print(f"{r.status_code} | {r.reason}")
+
+    def get_ncaa_basketball_odds(self):
+        ncaab_events = []
+        url = f'https://api.the-odds-api.com/v4/sports/basketball_ncaab/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american'
+        r = requests.get(url)
+
+        if r.status_code == 200:
+            print('Remaining requests', r.headers['x-requests-remaining'])
+            print('Used requests', r.headers['x-requests-used'])
+            event_records = r.json()
+            for event in event_records:
+                external_event_id = event['id']
+                if external_event_id not in self.existing_event_map:
+                    game = self.create_event(event, sport=Event.NCAAB)
+                    ncaab_events.append(game)
+            return ncaab_events
         else:
             print(f"{r.status_code} | {r.reason}")
 
@@ -97,19 +133,7 @@ class OpenApiService:
         away_team = event['away_team']
         bookmakers = event['bookmakers']
         for book in bookmakers:
-            if book['key'] == 'fanduel':
-                external_sportsbook = book['title']
-                external_book_data = book
-            elif book['key'] == 'draftkings':
-                external_sportsbook = book['title']
-                external_book_data = book
-            elif book['key'] == 'unibet':
-                external_sportsbook = book['title']
-                external_book_data = book
-            elif book['key'] == 'foxbet':
-                external_sportsbook = book['title']
-                external_book_data = book
-            elif book['key'] == 'barstool':
+            if len(book['markets']) == 3:
                 external_sportsbook = book['title']
                 external_book_data = book
 
@@ -130,27 +154,27 @@ class OpenApiService:
         if spread:
             for team in spread:
                 if team['name'] == home_team:
-                    spread_home_team_points = Decimal(team['point'])
-                    spread_home_team_price = Decimal(team['price'])
+                    spread_home_team_points = Decimal(str(team['point']))
+                    spread_home_team_price = Decimal(str(team['price']))
                 elif team['name'] == away_team:
-                    spread_away_team_points = Decimal(team['point'])
-                    spread_away_team_price = Decimal(team['price'])
+                    spread_away_team_points = Decimal(str(team['point']))
+                    spread_away_team_price = Decimal(str(team['price']))
 
         if money_line:
             for team in money_line:
                 if team['name'] == home_team:
-                    home_team_money_line_price = Decimal(team['price'])
+                    home_team_money_line_price = Decimal(str(team['price']))
                 if team['name'] == away_team:
-                    away_team_money_line_price = Decimal(team['price'])
+                    away_team_money_line_price = Decimal(str(team['price']))
 
         if over_under:
             for i in over_under:
                 if i['name'] == 'Over':
-                    over_points = Decimal(i['point'])
-                    over_price = Decimal(i['price'])
+                    over_points = Decimal(str(i['point']))
+                    over_price = Decimal(str(i['price']))
                 elif i['name'] == 'Under':
-                    under_points = Decimal(i['point'])
-                    under_price = Decimal(i['price'])
+                    under_points = Decimal(str(i['point']))
+                    under_price = Decimal(str(i['price']))
             if over_points == under_points:
                 over_under_points = over_points
 

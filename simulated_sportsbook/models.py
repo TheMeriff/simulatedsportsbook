@@ -8,12 +8,16 @@ class Event(models.Model):
     NFL = 'nfl'
     MMA = 'mma'
     CUSTOM = 'custom'
+    NHL = 'nhl'
+    NCAAB = 'ncaab'
 
     SPORTS = [
         (NBA, 'NBA'),
         (NFL, 'NFL'),
         (MMA, 'MMA'),
-        (CUSTOM, 'CUSTOM')
+        (CUSTOM, 'CUSTOM'),
+        (NHL, 'NHL'),
+        (NCAAB, 'NCAAB')
     ]
 
     external_id = models.CharField(max_length=100, null=True, blank=True)

@@ -17,7 +17,7 @@ class BetslipsService:
         starting_balance = user_account.current_balance
         print(f'{user_account.user.username} account value before deducting wager | {user_account.current_balance}')
 
-        stake = data['stake']
+        stake = str(data['stake'])
         stake = Decimal(stake)
         adjusted_stake_for_user = -abs(stake)
 
