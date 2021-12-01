@@ -136,7 +136,7 @@ def refresh_odds(request):
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
             if nhl_refresh == 'on':
-                # nhl_events = OpenApiService().get_nhl_odds()
+                nhl_events = OpenApiService().get_nhl_odds()
                 ResultsService.process_nhl_events()
             # if ncaa_basketball_refresh == 'on':
             #     # ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
