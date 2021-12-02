@@ -84,6 +84,7 @@ class OpenApiService:
                 if external_event_id not in self.existing_event_map:
                     game = self.create_event(event, sport=Event.NHL)
                     nhl_events.append(game)
+                print(f'Created {len(nhl_events)} NHL events')
             return nhl_events
         else:
             print(f"{r.status_code} | {r.reason}")

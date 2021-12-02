@@ -95,8 +95,6 @@ class ResultsService:
     @staticmethod
     def process_nhl_events():
         updated_events = []
-        now = datetime.utcnow()
-        date_filter = now - timedelta(hours=12)
         nhl_events = Event.objects.filter(sport=Event.NHL).exclude(completed=True)
         if nhl_events:
             for event in nhl_events:
