@@ -178,25 +178,36 @@ class OpenApiService:
                     under_price = Decimal(str(i['price']))
             if over_points == under_points:
                 over_under_points = over_points
-
-        event = Event.objects.create(
-            external_id=external_event_id,
-            sport=sport,
-            home_team=home_team,
-            away_team=away_team,
-            start_time=event_start_time,
-            over_price=over_price,
-            under_price=under_price,
-            over_under_points=over_under_points,
-            spread_away_team_points=spread_away_team_points,
-            spread_away_team_price=spread_away_team_price,
-            spread_home_team_price=spread_home_team_price,
-            spread_home_team_points=spread_home_team_points,
-            away_team_money_line_price=away_team_money_line_price,
-            home_team_money_line_price=home_team_money_line_price,
-            last_updated=event_last_updated,
-            external_sportsbook=external_sportsbook
+        lines = (
+            spread_home_team_points,
+            spread_away_team_points,
+            spread_away_team_price,
+            spread_home_team_price,
+            over_price,
+            under_price,
+            away_team_money_line_price,
+            home_team_money_line_price
         )
-        print(f'{event.sport.upper()} Event {event.external_id} was added to database')
+
+        if all(lines):
+            event = Event.objects.create(
+                external_id=external_event_id,
+                sport=sport,
+                home_team=home_team,
+                away_team=away_team,
+                start_time=event_start_time,
+                over_price=over_price,
+                under_price=under_price,
+                over_under_points=over_under_points,
+                spread_away_team_points=spread_away_team_points,
+                spread_away_team_price=spread_away_team_price,
+                spread_home_team_price=spread_home_team_price,
+                spread_home_team_points=spread_home_team_points,
+                away_team_money_line_price=away_team_money_line_price,
+                home_team_money_line_price=home_team_money_line_price,
+                last_updated=event_last_updated,
+                external_sportsbook=external_sportsbook
+            )
+            print(f'{event.sport.upper()} Event {event.external_id} was added to database')
 
         return event

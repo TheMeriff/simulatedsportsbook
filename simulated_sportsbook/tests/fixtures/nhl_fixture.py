@@ -27,7 +27,7 @@ nhl_team_abbreviations = {
     "Seattle Kraken": "SEA",
     "Chicago Blackhawks": "CHI",
     "Vancouver Canucks": "VAN",
-    "Montreal Canadiens": "MTL",
+    "Montréal Canadiens": "MTL",
     "New York Islanders": "NYI",
     "Arizona Coyotes": "ARI",
     "Ottawa Senators": "OTT",

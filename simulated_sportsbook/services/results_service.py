@@ -20,9 +20,7 @@ class ResultsService:
     @staticmethod
     def process_nfl_events():
         updated_events = []
-        now = datetime.utcnow()
-        date_filter = now - timedelta(hours=12)
-        nfl_events = Event.objects.filter(sport=Event.NFL).exclude(start_time__gte=date_filter).exclude(completed=True)
+        nfl_events = Event.objects.filter(sport=Event.NFL).exclude(completed=True)
         if nfl_events:
             for event in nfl_events:
                 updated_event = ResultsService.get_nfl_result(event)
