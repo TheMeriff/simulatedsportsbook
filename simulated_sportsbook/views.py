@@ -204,12 +204,12 @@ def account(request):
     if request.method == 'POST':
         account_reset = request.POST.get('account_reset_true')
         if account_reset:
-            pending_betslips = Betslip.objects.filter(user_account__user=request.user)
+            pending_betslips = Betslip.objects.filter(user_account__user=request.user).exclude(processed_ticket=True)
             if pending_betslips:
                 messages.error(request, 'You are not allowed to reset your balance while you still have pending betslips.')
                 return render(request, 'account.html', context=context)
             UserAccountService().reset_account_balance(request.user)
-            messages.success(request, 'Account Balance reset to 500')
+            messages.success(request, 'Account Balance reset to 1000')
             return render(request, 'account.html', context=context)
         else:
             messages.error(request, 'Check the box if you and hit the red button if you want to reset your account.')
