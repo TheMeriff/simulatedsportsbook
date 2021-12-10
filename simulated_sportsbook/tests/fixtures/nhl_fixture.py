@@ -8,7 +8,7 @@ nhl_team_abbreviations = {
     "Edmonton Oilers": "EDM",
     "New York Rangers": "NYR",
     "Tampa Bay Lightning": "TBL",
-    "St. Louis Blues": "STL",
+    "St Louis Blues": "STL",
     "Anaheim Ducks": "ANA",
     "Detroit Red Wings": "DET",
     "Nashville Predators": "NSH",
