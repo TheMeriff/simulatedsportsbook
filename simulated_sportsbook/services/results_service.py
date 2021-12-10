@@ -7,6 +7,7 @@ from sportsreference.ncaab.teams import Teams
 from sportsreference.nhl.boxscore import Boxscore as nhlboxscore
 
 from simulated_sportsbook.models import Event
+from simulated_sportsbook.services.discord_service import DiscordService
 from simulated_sportsbook.tests.fixtures.nba_fixture import nba_team_abbreviations
 from simulated_sportsbook.tests.fixtures.ncaab_fixture import ncaab_team_abbreviations
 from simulated_sportsbook.tests.fixtures.nfl_fixture import nfl_team_abbreviations
@@ -46,7 +47,22 @@ class ResultsService:
             event.completed = True
             event.save()
             print(f'{event} was successfully updated with a score.')
-
+            if event.away_team_points_scored > event.home_team_points_scored:
+                winning_team = event.away_team
+                higher_num = event.away_team_points_scored
+                lower_num = event.home_team_points_scored
+            elif event.home_team_points_scored > event.away_team_points_scored:
+                winning_team = event.home_team
+                higher_num = event.home_team_points_scored
+                lower_num = event.away_team_points_scored
+            else:
+                winning_team = 'Shit broke got a problem yo.'
+                higher_num = 'Shit broke got a problem yo.'
+                lower_num = 'Shit broke got a problem yo.'
+            score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
+            DiscordService().post_score(score_data, '918755041794478110')
+            score_data_2 = '-------------------'
+            DiscordService().post_score(score_data_2, '918755041794478110')
         return event
 
     @staticmethod
@@ -85,6 +101,22 @@ class ResultsService:
                     event.completed = True
                     event.save()
                     print(f'{event} was successfully updated with a score.')
+                    if event.away_team_points_scored > event.home_team_points_scored:
+                        winning_team = event.away_team
+                        higher_num = event.away_team_points_scored
+                        lower_num = event.home_team_points_scored
+                    elif event.home_team_points_scored > event.away_team_points_scored:
+                        winning_team = event.home_team
+                        higher_num = event.home_team_points_scored
+                        lower_num = event.away_team_points_scored
+                    else:
+                        winning_team = 'Shit broke got a problem yo.'
+                        higher_num = 'Shit broke got a problem yo.'
+                        lower_num = 'Shit broke got a problem yo.'
+                    score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
+                    DiscordService().post_score(score_data, '918755540736307221')
+                    score_data_2 = '-------------------'
+                    DiscordService().post_score(score_data_2, '918755540736307221')
 
                     return event
         else:
@@ -120,6 +152,22 @@ class ResultsService:
             event.completed = True
             event.save()
             print(f'{event} was successfully updated with a score.')
+            if event.away_team_points_scored > event.home_team_points_scored:
+                winning_team = event.away_team
+                higher_num = event.away_team_points_scored
+                lower_num = event.home_team_points_scored
+            elif event.home_team_points_scored > event.away_team_points_scored:
+                winning_team = event.home_team
+                higher_num = event.home_team_points_scored
+                lower_num = event.away_team_points_scored
+            else:
+                winning_team = 'Shit broke got a problem yo.'
+                higher_num = 'Shit broke got a problem yo.'
+                lower_num = 'Shit broke got a problem yo.'
+            score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
+            DiscordService().post_score(score_data, '918756459368566784')
+            score_data_2 = '-------------------'
+            DiscordService().post_score(score_data_2, '918756459368566784')
 
         return event
 
