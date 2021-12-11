@@ -1,3 +1,4 @@
+import time
 from datetime import datetime, timedelta
 
 import requests
@@ -59,10 +60,17 @@ class ResultsService:
                 winning_team = 'Shit broke got a problem yo.'
                 higher_num = 'Shit broke got a problem yo.'
                 lower_num = 'Shit broke got a problem yo.'
-            score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
+            score_data = f"{event.away_team} at {event.home_team}"
             DiscordService().post_score(score_data, '918755041794478110')
-            score_data_2 = '-------------------'
+            time.sleep(1)
+            score_data_2 = f"Winner: {winning_team}"
             DiscordService().post_score(score_data_2, '918755041794478110')
+            time.sleep(1)
+            score_data_3 = f"{higher_num} - {lower_num}"
+            DiscordService().post_score(score_data_3, '918755041794478110')
+            time.sleep(1)
+            score_data_4 = '--------------------------------------'
+            DiscordService().post_score(score_data_4, '918755041794478110')
         return event
 
     @staticmethod
@@ -96,27 +104,35 @@ class ResultsService:
             games = data['games']
             for game in games:
                 if game['vTeam']['triCode'] == away_team_abbreviation and game['hTeam']['triCode'] == home_team_abbreviation:
-                    event.home_team_points_scored = game['hTeam']['score']
-                    event.away_team_points_scored = game['vTeam']['score']
-                    event.completed = True
-                    event.save()
-                    print(f'{event} was successfully updated with a score.')
-                    if event.away_team_points_scored > event.home_team_points_scored:
-                        winning_team = event.away_team
-                        higher_num = event.away_team_points_scored
-                        lower_num = event.home_team_points_scored
-                    elif event.home_team_points_scored > event.away_team_points_scored:
-                        winning_team = event.home_team
-                        higher_num = event.home_team_points_scored
-                        lower_num = event.away_team_points_scored
-                    else:
-                        winning_team = 'Shit broke got a problem yo.'
-                        higher_num = 'Shit broke got a problem yo.'
-                        lower_num = 'Shit broke got a problem yo.'
-                    score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
-                    DiscordService().post_score(score_data, '918755540736307221')
-                    score_data_2 = '-------------------'
-                    DiscordService().post_score(score_data_2, '918755540736307221')
+                    if game['hTeam']['score'] != '' and game['vTeam']['score'] != '':
+                        event.home_team_points_scored = game['hTeam']['score']
+                        event.away_team_points_scored = game['vTeam']['score']
+                        event.completed = True
+                        event.save()
+                        print(f'{event} was successfully updated with a score.')
+                        if int(event.away_team_points_scored) > int(event.home_team_points_scored):
+                            winning_team = event.away_team
+                            higher_num = event.away_team_points_scored
+                            lower_num = event.home_team_points_scored
+                        elif int(event.home_team_points_scored) > int(event.away_team_points_scored):
+                            winning_team = event.home_team
+                            higher_num = event.home_team_points_scored
+                            lower_num = event.away_team_points_scored
+                        else:
+                            winning_team = 'Shit broke got a problem yo.'
+                            higher_num = 'Shit broke got a problem yo.'
+                            lower_num = 'Shit broke got a problem yo.'
+                        score_data = f"{event.away_team} at {event.home_team}"
+                        DiscordService().post_score(score_data, '918755540736307221')
+                        time.sleep(1)
+                        score_data_2 = f"Winner: {winning_team}"
+                        DiscordService().post_score(score_data_2, '918755540736307221')
+                        time.sleep(1)
+                        score_data_3 = f"{higher_num} - {lower_num}"
+                        DiscordService().post_score(score_data_3, '918755540736307221')
+                        time.sleep(1)
+                        score_data_4 = '--------------------------------------'
+                        DiscordService().post_score(score_data_4, '918755540736307221')
 
                     return event
         else:
@@ -164,10 +180,16 @@ class ResultsService:
                 winning_team = 'Shit broke got a problem yo.'
                 higher_num = 'Shit broke got a problem yo.'
                 lower_num = 'Shit broke got a problem yo.'
-            score_data = f"{event.away_team} at {event.home_team} | Winner {winning_team} {higher_num}-{lower_num}"
+            score_data = f"{event.away_team} at {event.home_team}"
             DiscordService().post_score(score_data, '918756459368566784')
-            score_data_2 = '-------------------'
-            DiscordService().post_score(score_data_2, '918756459368566784')
+            time.sleep(1)
+            score_data2 = f"Winner : {winning_team}"
+            DiscordService().post_score(score_data2, '918756459368566784')
+            time.sleep(1)
+            score_data3 = f"{higher_num} - {lower_num}"
+            DiscordService().post_score(score_data3, '918756459368566784')
+            score_data_4 = '--------------------------------------'
+            DiscordService().post_score(score_data_4, '918756459368566784')
 
         return event
 
