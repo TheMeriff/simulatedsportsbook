@@ -168,6 +168,16 @@ class ResultsService:
             event.completed = True
             event.save()
             print(f'{event} was successfully updated with a score.')
+            if boxscore.home_goals == boxscore.away_goals:
+                # determine who won the shoot out
+                winning_team = boxscore.winning_name
+                if event.home_team == winning_team:
+                    event.home_team_points_scored += 1
+                    event.save()
+                elif event.away_team == winning_team:
+                    event.away_team_points_scored += 1
+                    event.save()
+
             if event.away_team_points_scored > event.home_team_points_scored:
                 winning_team = event.away_team
                 higher_num = event.away_team_points_scored
