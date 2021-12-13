@@ -171,14 +171,14 @@ def account(request):
     user_betslips = Betslip.objects.filter(user_account=user_account)
     total_betslips = len(user_betslips)
     processed_betslips = user_betslips.exclude(processed_ticket=False)
-    winning_tickets = processed_betslips.filter(winning_ticket=True)
+    winning_tickets = processed_betslips.filter(winning_ticket=True).order_by('-id')
     if winning_tickets and processed_betslips:
         winning_percent = winning_tickets.count() / processed_betslips.count()
     else:
         winning_percent = None
-    losing_tickets = processed_betslips.exclude(winning_ticket=True)
+    losing_tickets = processed_betslips.exclude(winning_ticket=True).order_by('-id')
     num_losing_tickets = losing_tickets.count()
-    pending_betslips = user_betslips.filter(processed_ticket=False)
+    pending_betslips = user_betslips.filter(processed_ticket=False).order_by('-id')
 
     largest_bet = 0
     for bet in user_betslips:

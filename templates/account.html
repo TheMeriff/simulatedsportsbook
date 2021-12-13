@@ -60,6 +60,8 @@
         </div>
     </nav>
     <br>
+    <h2 style="text-align: center">Account Info</h2>
+    <br>
     <div class="ui cards" style="text-align: center; margin: 0 auto; align-content: center">
         <div class="card" style="margin: 0 auto; background-color: #C5C6C7">
             <div class="content">
@@ -117,7 +119,7 @@
         <h2>Betslips</h2>
         <h3>Pending</h3>
         {% for betslip in pending_betslips %}
-        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7";>
+        <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
           </div>
@@ -137,36 +139,92 @@
                         </div>
                     </div>
                 </div>
-              <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
-                  </div>
-                </div>
+                {% if betslip.type_of_bet == "money line" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Money Line Price: {{ betslip.event.home_team_money_line_price }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Money Line Price: {{ betslip.event.away_team_money_line_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                    <div class="content">
+                        <div class="summary" style="text-align: center">
+                            <p>Amount Wagered: {{ betslip.stake }}</p>
+                        </div>
+                    </div>
               </div>
-
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
-                  </div>
-                </div>
-              </div>
-
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
-                  </div>
-                </div>
-              </div>
-              <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                     <p>Amount Wagered: {{ betslip.stake }}</p>
-                  </div>
-                </div>
-              </div>
+                {% elif betslip.type_of_bet == "over under" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Over/Under: {{ betslip.event.over_under_points }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.event.predicted_outcome == 'over' %}
+                                  <p>Over Price: {{ betslip.event.over_price }}</p>
+                              {% elif betslip.event.predicted_outcome == 'under' %}
+                                  <p>Under Price: {{ betslip.event.under_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% elif betslip.type_of_bet == 'spread' %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Spread: {{ betslip.event.spread_home_team_points }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Spread: {{ betslip.event.spread_away_team_points }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
           </div>
         </div>
@@ -194,36 +252,92 @@
                         </div>
                     </div>
                 </div>
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
-                  </div>
-                </div>
+                {% if betslip.type_of_bet == "money line" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Money Line Price: {{ betslip.event.home_team_money_line_price }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Money Line Price: {{ betslip.event.away_team_money_line_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                    <div class="content">
+                        <div class="summary" style="text-align: center">
+                            <p>Amount Wagered: {{ betslip.stake }}</p>
+                        </div>
+                    </div>
               </div>
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
-                  </div>
-                </div>
-              </div>
-
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                     <p>Amount Wagered: {{ betslip.stake }}</p>
-                  </div>
-                </div>
-              </div>
+                {% elif betslip.type_of_bet == "over under" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Over/Under: {{ betslip.event.over_under_points }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.event.predicted_outcome == 'over' %}
+                                  <p>Over Price: {{ betslip.event.over_price }}</p>
+                              {% elif betslip.event.predicted_outcome == 'under' %}
+                                  <p>Under Price: {{ betslip.event.under_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% elif betslip.type_of_bet == 'spread' %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Spread: {{ betslip.event.spread_home_team_points }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Spread: {{ betslip.event.spread_away_team_points }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
               <div class="event">
                 <div class="content">
                   <div class="summary" style="text-align: center">
@@ -236,9 +350,9 @@
                     <div class="summary" style="text-align: center">
                        <p>Total Return: {{ betslip.total_return }}</p>
                     </div>
-                </div>
+                 </div>
               </div>
-            </div>
+             </div>
           </div>
         </div>
         {% endfor %}
@@ -266,35 +380,92 @@
                         </div>
                     </div>
                 </div>
-              <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
-                  </div>
-                </div>
+                {% if betslip.type_of_bet == "money line" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Money Line Price: {{ betslip.event.home_team_money_line_price }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Money Line Price: {{ betslip.event.away_team_money_line_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                    <div class="content">
+                        <div class="summary" style="text-align: center">
+                            <p>Amount Wagered: {{ betslip.stake }}</p>
+                        </div>
+                    </div>
               </div>
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Home Spread: {{ betslip.event.spread_home_team_points }}</p>
-                  </div>
-                </div>
-              </div>
-                <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                      <p>Event Over Under: {{ betslip.event.over_under_points }}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="event">
-                <div class="content">
-                  <div class="summary" style="text-align: center">
-                     <p>Amount Wagered: {{ betslip.stake }}</p>
-                  </div>
-                </div>
-              </div>
+                {% elif betslip.type_of_bet == "over under" %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Over/Under: {{ betslip.event.over_under_points }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.event.predicted_outcome == 'over' %}
+                                  <p>Over Price: {{ betslip.event.over_price }}</p>
+                              {% elif betslip.event.predicted_outcome == 'under' %}
+                                  <p>Under Price: {{ betslip.event.under_price }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% elif betslip.type_of_bet == 'spread' %}
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              <p>Predicted Outcome: {{ betslip.predicted_outcome }}</p>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                          <div class="summary" style="text-align: center">
+                              {% if betslip.predicted_outcome == betslip.event.home_team %}
+                                <p>Spread: {{ betslip.event.spread_home_team_points }}</p>
+                              {% elif betslip.predicted_outcome == betslip.event.away_team %}
+                                <p>Spread: {{ betslip.event.spread_away_team_points }}</p>
+                              {% endif %}
+                          </div>
+                        </div>
+                    </div>
+                    <div class="event">
+                        <div class="content">
+                            <div class="summary" style="text-align: center">
+                                <p>Amount Wagered: {{ betslip.stake }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
           </div>
         </div>

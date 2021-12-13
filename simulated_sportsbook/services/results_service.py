@@ -66,7 +66,7 @@ class ResultsService:
             score_data_2 = f"Winner: {winning_team}"
             DiscordService().post_score(score_data_2, '918755041794478110')
             time.sleep(1)
-            score_data_3 = f"{higher_num} - {lower_num}"
+            score_data_3 = f"{higher_num}-{lower_num}"
             DiscordService().post_score(score_data_3, '918755041794478110')
             time.sleep(1)
             score_data_4 = '--------------------------------------'
@@ -128,7 +128,7 @@ class ResultsService:
                         score_data_2 = f"Winner: {winning_team}"
                         DiscordService().post_score(score_data_2, '918755540736307221')
                         time.sleep(1)
-                        score_data_3 = f"{higher_num} - {lower_num}"
+                        score_data_3 = f"{higher_num}-{lower_num}"
                         DiscordService().post_score(score_data_3, '918755540736307221')
                         time.sleep(1)
                         score_data_4 = '--------------------------------------'
@@ -186,7 +186,7 @@ class ResultsService:
             score_data2 = f"Winner : {winning_team}"
             DiscordService().post_score(score_data2, '918756459368566784')
             time.sleep(1)
-            score_data3 = f"{higher_num} - {lower_num}"
+            score_data3 = f"{higher_num}-{lower_num}"
             DiscordService().post_score(score_data3, '918756459368566784')
             score_data_4 = '--------------------------------------'
             DiscordService().post_score(score_data_4, '918756459368566784')
