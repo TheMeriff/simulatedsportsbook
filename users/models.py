@@ -9,6 +9,9 @@ class Account(models.Model):
     current_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=1000.00)
     account_resets = models.IntegerField(default=0)
 
+    def account_adjustments(self):
+        return self.adjustments.all()
+
     def __str__(self):
         return f'{self.user.username} | Current Balance: {self.current_balance}'
 

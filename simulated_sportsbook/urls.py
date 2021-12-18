@@ -16,10 +16,18 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+
+from simulated_sportsbook.rest_api.rest_views import UserViewSet, AccountViewSet, EventViewSet, BetslipViewSet
 from users import views as user_views
-from django.contrib.auth import views as auth_views
 
 from simulated_sportsbook import views
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'accounts', AccountViewSet)
+router.register(r'events', EventViewSet)
+router.register(r'betslips', BetslipViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -33,4 +41,6 @@ urlpatterns = [
     path('logout/', user_views.logout_request, name='logout'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/profile/', views.index, name='login_redirect'),
+    path('api-auth/', include('rest_framework.urls')),
+    path('rest_api/', include(router.urls))
 ]
