@@ -38,7 +38,13 @@ class ResultsService:
             day = f'0{event.start_time.day}'
         else:
             day = event.start_time.day
-        url = f'{event.start_time.year}{event.start_time.month}{day}0{team_abbreviation.lower()}'
+
+        if event.start_time.month < 10:
+            month = f'0{event.start_time.month}'
+        else:
+            month = event.start_time.month
+
+        url = f'{event.start_time.year}{month}{day}0{team_abbreviation.lower()}'
         boxscore = Boxscore(url)
         # Check both in the event of one team getting shutout
         if boxscore.home_points or boxscore.away_points:
@@ -97,7 +103,12 @@ class ResultsService:
         else:
             day = event.start_time.day
 
-        date_for_url = f'{event.start_time.year}{event.start_time.month}{day}'
+        if event.start_time.month < 10:
+            month = f'0{event.start_time.month}'
+        else:
+            month = event.start_time.month
+
+        date_for_url = f'{event.start_time.year}{month}{day}'
         r = requests.get(f'http://data.nba.net/10s/prod/v1/{date_for_url}/scoreboard.json')
         if r.status_code == 200:
             data = r.json()
@@ -158,7 +169,13 @@ class ResultsService:
             day = f'0{event.start_time.day}'
         else:
             day = event.start_time.day
-        url = f'{event.start_time.year}{event.start_time.month}{day}0{team_abbreviation.upper()}'
+
+        if event.start_time.month < 10:
+            month = f'0{event.start_time.month}'
+        else:
+            month = event.start_time.month
+
+        url = f'{event.start_time.year}{month}{day}0{team_abbreviation.upper()}'
         boxscore = nhlboxscore(url)
         # Check both in the event one team is shutout
         if boxscore.home_goals or boxscore.away_goals:
