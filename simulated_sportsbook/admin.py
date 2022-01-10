@@ -6,13 +6,13 @@ from users.models import Account, AccountAdjustments
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    fields = ['sport', 'home_team', 'away_team', 'start_time', 'last_updated', 'spread_away_team_points',
+    fields = ['external_id', 'sport', 'home_team', 'away_team', 'start_time', 'last_updated', 'spread_away_team_points',
               'spread_away_team_price', 'spread_home_team_points', 'spread_home_team_price', 'over_under_points',
               'over_price', 'under_price', 'away_team_money_line_price', 'home_team_money_line_price',
               'external_sportsbook', 'away_team_points_scored', 'home_team_points_scored', 'completed'
               ]
     list_display = [
-        'id', 'sport', 'home_team', 'away_team', 'start_time', 'over_under_points', 'spread_away_team_points',
+        'id', 'external_id', 'sport', 'home_team', 'away_team', 'start_time', 'over_under_points', 'spread_away_team_points',
         'spread_away_team_price', 'spread_home_team_points', 'spread_home_team_price', 'external_sportsbook',
         'away_team_money_line_price', 'home_team_money_line_price', 'last_updated', 'away_team_points_scored',
         'home_team_points_scored', 'completed'
