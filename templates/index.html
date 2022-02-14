@@ -154,6 +154,7 @@
     <br>
     <hr>
     <br>
+    {% if nfl_events %}
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
         <br>
@@ -200,11 +201,12 @@
         {% endfor %}
         <br>
         </div>
+    {% endif %}
     <br>
     <hr>
     <br>
 
-
+    {% if nhl_events %}
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nhl_events">NHL Games</button>
         <div class="collapse-content" style="text-align: center">
         <br>
@@ -248,9 +250,10 @@
                     </div>
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
         <br>
         </div>
+    {% endif %}
 
 
 {#    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="mma_events">MMA Fights</button>#}
