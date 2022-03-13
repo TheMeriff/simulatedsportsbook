@@ -223,7 +223,6 @@ class ResultsService:
     @staticmethod
     def process_ncaab_events():
         updated_events = []
-        now = datetime.utcnow()
         ncaab_events = Event.objects.filter(sport=Event.NCAAB).exclude(completed=True)
         if ncaab_events:
             for event in ncaab_events:

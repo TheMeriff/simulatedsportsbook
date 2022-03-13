@@ -57,6 +57,7 @@ def index(request):
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         nhl_events = Event.objects.filter(sport=Event.NHL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         custom_events = Event.objects.filter(sport=Event.CUSTOM).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        ncaab_events = Event.objects.filter(sport=Event.NCAAB).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         leaderboard_data = Account.objects.all().order_by('-current_balance')
         leaderboard = {}
         for player in leaderboard_data[:5]:
@@ -86,6 +87,7 @@ def index(request):
             'account': user_account,
             'nba_events': nba_events,
             'nfl_events': nfl_events,
+            'ncaab_events': ncaab_events,
             # 'mma_events': mma_events,
             'nhl_events': nhl_events,
             'custom_events': custom_events,
@@ -138,9 +140,9 @@ def refresh_odds(request):
             if nhl_refresh == 'on':
                 nhl_events = OpenApiService().get_nhl_odds()
                 ResultsService.process_nhl_events()
-            # if ncaa_basketball_refresh == 'on':
-            #     # ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
-            #     ResultsService.process_ncaab_events()
+            if ncaa_basketball_refresh == 'on':
+                ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
+                ResultsService.process_ncaab_events()
             if process_betslips == 'on':
                 betslips = Betslip.objects.all().exclude(processed_ticket=True)
                 for betslip in betslips:
@@ -149,7 +151,8 @@ def refresh_odds(request):
                 'nba_events': nba_events,
                 'nfl_events': nfl_events,
                 'mma_events': mma_events,
-                'nhl_events': nhl_events
+                'nhl_events': nhl_events,
+                'ncaab_events': ncaa_basketball_events
             }
         except Exception as e:
             return HttpResponse(e)
