@@ -8,7 +8,7 @@ class TelegramService:
         pass
 
     def send_potty_reminder(self):
-        acceptable_hours = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 1, 2]
+        acceptable_hours = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1]
         now = datetime.utcnow()
         if now.hour in acceptable_hours:
             bot_token = '550737128:AAFfDfWekynT_wxsQuNpynXkBO4xkdr4QNo'
