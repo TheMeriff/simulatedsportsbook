@@ -4,11 +4,13 @@ from datetime import datetime, timedelta
 import requests
 from sportsreference.nfl.boxscore import Boxscore
 from sportsreference.ncaab.boxscore import Boxscore as ncaaboxscore
+from sportsreference.mlb.boxscore import Boxscore as mlbboxscore
 from sportsreference.ncaab.teams import Teams
 from sportsreference.nhl.boxscore import Boxscore as nhlboxscore
 
 from simulated_sportsbook.models import Event
 from simulated_sportsbook.services.discord_service import DiscordService
+from simulated_sportsbook.tests.fixtures.mlb_fixture import mlb_team_abbreviations
 from simulated_sportsbook.tests.fixtures.nba_fixture import nba_team_abbreviations
 from simulated_sportsbook.tests.fixtures.ncaab_fixture import ncaab_team_abbreviations
 from simulated_sportsbook.tests.fixtures.nfl_fixture import nfl_team_abbreviations
@@ -219,6 +221,45 @@ class ResultsService:
             DiscordService().post_score(score_data_4, '918756459368566784')
 
         return event
+
+    @staticmethod
+    def process_mlb_events():
+        updated_events = []
+        mlb_events = Event.objects.filter(sport=Event.MLB).exclude(completed=True)
+        if mlb_events:
+            for event in mlb_events:
+                updated_event = ResultsService.get_mlb_result(event)
+                updated_events.append(updated_event)
+            if len(updated_events) > 0:
+                print(f'Updated {len(updated_events)} MLB events with scores and marked them as complete.')
+        else:
+            print('No MLB events to update')
+
+    @staticmethod
+    def get_mlb_result(event):
+        # away_team_abbreviation = mlb_team_abbreviations[event.away_team]
+        home_team_abbreviation = mlb_team_abbreviations[event.home_team]
+
+        if event.start_time.day < 10:
+            day = f'0{event.start_time.day}'
+        else:
+            day = event.start_time.day
+
+        if event.start_time.month < 10:
+            month = f'0{event.start_time.month}'
+        else:
+            month = event.start_time.month
+
+        url = f'{home_team_abbreviation}/{home_team_abbreviation}{event.start_time.year}{month}{day}0'
+        boxscore = mlbboxscore(url)
+        # Check both in the event one team is shutout
+        if boxscore.home_runs or boxscore.away_runs:
+            event.away_team_points_scored = boxscore.away_runs
+            event.home_team_points_scored = boxscore.home_runs
+            event.last_updated = datetime.utcnow()
+            event.completed = True
+            event.save()
+            print(f'{event} was successfully updated with a score.')
 
     @staticmethod
     def process_ncaab_events():

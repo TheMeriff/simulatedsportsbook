@@ -34,6 +34,22 @@ class OpenApiService:
         else:
             print(f"{r.status_code} | {r.reason}")
 
+    def get_mlb_odds(self):
+        mlb_events = []
+        r = requests.get(f'https://api.the-odds-api.com/v4/sports/baseball_mlb/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')
+        if r.status_code == 200:
+            print('Remaining requests', r.headers['x-requests-remaining'])
+            print('Used requests', r.headers['x-requests-used'])
+            event_records = r.json()
+            for event in event_records:
+                external_event_id = event['id']
+                if external_event_id not in self.existing_event_map:
+                    game = self.create_event(event, sport=Event.MLB)
+                    mlb_events.append(game)
+            return mlb_events
+        else:
+            print(f"{r.status_code} | {r.reason}")
+
     def get_nba_odds(self):
         nba_events = []
         r = requests.get(f'https://api.the-odds-api.com/v4/sports/basketball_nba/odds/?apiKey={random.choice(self.api_keys)}&regions=us&markets=h2h,spreads,totals&oddsFormat=american')

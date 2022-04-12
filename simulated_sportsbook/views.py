@@ -53,6 +53,7 @@ def index(request):
         user_account = Account.objects.get(user=request.user)
         current_balance = user_account.current_balance
         nba_events = Event.objects.filter(sport=Event.NBA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
+        mlb_events = Event.objects.filter(sport=Event.MLB).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         nfl_events = Event.objects.filter(sport=Event.NFL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         mma_events = Event.objects.filter(sport=Event.MMA).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
         nhl_events = Event.objects.filter(sport=Event.NHL).order_by('start_time').exclude(completed=True).exclude(start_time__lt=now)
@@ -88,6 +89,7 @@ def index(request):
             'nba_events': nba_events,
             'nfl_events': nfl_events,
             'ncaab_events': ncaab_events,
+            'mlb_events': mlb_events,
             # 'mma_events': mma_events,
             'nhl_events': nhl_events,
             'custom_events': custom_events,
@@ -118,11 +120,13 @@ def refresh_odds(request):
     nfl_events = None
     mma_events = None
     nhl_events = None
+    mlb_events = None
     ncaa_basketball_events = None
     if request.method == 'POST':
         try:
             nba_refresh = request.POST.get('nba_refresh')
             nfl_refresh = request.POST.get('nfl_refresh')
+            mlb_refresh = request.POST.get('mlb_refresh')
             mma_refresh = request.POST.get('mma_refresh')
             nhl_refresh = request.POST.get('nhl_refresh')
             ncaa_basketball_refresh = request.POST.get('ncaa_basketball_refresh')
@@ -137,6 +141,9 @@ def refresh_odds(request):
                 ResultsService.process_nfl_events()
             if mma_refresh == 'on':
                 mma_events = OpenApiService().get_mma_odds()
+            if mlb_refresh == 'on':
+                mlb_events = OpenApiService().get_mlb_odds()
+                ResultsService.process_mlb_events()
             if nhl_refresh == 'on':
                 nhl_events = OpenApiService().get_nhl_odds()
                 ResultsService.process_nhl_events()
@@ -149,6 +156,7 @@ def refresh_odds(request):
                     BetslipsService().process_betslip(betslip)
             context = {
                 'nba_events': nba_events,
+                'mlb_events': mlb_events,
                 'nfl_events': nfl_events,
                 'mma_events': mma_events,
                 'nhl_events': nhl_events,
