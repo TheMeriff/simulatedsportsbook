@@ -145,6 +145,7 @@ class OpenApiService:
         external_event_id = event['id']
         start_time = event['commence_time']
         start_time_obj = parser.parse(start_time)
+        cdt = start_time_obj - timedelta(hours=5)
         home_team = event['home_team']
         away_team = event['away_team']
         bookmakers = event['bookmakers']
@@ -157,7 +158,7 @@ class OpenApiService:
             markets = external_book_data['markets']
             last_updated = external_book_data['last_update']
             last_updated_obj = parser.parse(last_updated)
-            event_last_updated = last_updated_obj - timedelta(hours=6)
+            event_last_updated = last_updated_obj - timedelta(hours=5)
         if markets:
             for market in markets:
                 if market['key'] == 'h2h':
@@ -210,7 +211,7 @@ class OpenApiService:
                 sport=sport,
                 home_team=home_team,
                 away_team=away_team,
-                start_time=start_time_obj,
+                start_time=cdt,
                 over_price=over_price,
                 under_price=under_price,
                 over_under_points=over_under_points,
