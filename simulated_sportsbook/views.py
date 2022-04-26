@@ -46,7 +46,7 @@ def index(request):
         except Exception as e:
             render(request, e)
     else:
-        now = datetime.utcnow() - timedelta(hours=6)
+        now = datetime.utcnow() - timedelta(hours=5)
         house_account = Account.objects.get(id=1)
         house_balance = house_account.current_balance
         username = request.user.username
