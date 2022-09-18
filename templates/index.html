@@ -152,7 +152,6 @@
         </div>
         <br>
     {% endif %}
-
     {% if nba_events %}
     <hr>
     <br>
@@ -204,13 +203,13 @@
             </div>
         {% endfor %}
         </div>
+    <br>
     {% endif %}
     {% if nfl_events %}
     <hr>
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
-        <br>
             {% for event in nfl_events %}
             <div class="ui message" style="background-color: #1f2833">
                 <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
@@ -252,12 +251,10 @@
                 </div>
             </div>
         {% endfor %}
-        <br>
         </div>
-        <br>
+    <br>
     {% endif %}
     {% if nhl_events %}
-    <br>
     <hr>
     <br>
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nhl_events">NHL Games</button>
@@ -306,7 +303,7 @@
             {% endfor %}
         <br>
         </div>
-        <br>
+    <br>
     {% endif %}
     {% if ncaab_events %}
     <hr>
@@ -452,7 +449,12 @@
       </div>
     </div>
     <br>
-
+    <br>
+    <br>
+    <br>
+    <footer style="text-align: center">
+        <h4>PracticeSportsbook.com &copy; 2022</h4>
+    </footer>
 </body>
 <script>
 {# show/hide warehouse nested rows #}

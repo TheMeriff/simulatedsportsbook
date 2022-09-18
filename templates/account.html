@@ -116,9 +116,11 @@
         <br>
         <br>
         <hr>
-        <h2>Betslips</h2>
-        <h3>Pending</h3>
-        {% for betslip in pending_betslips %}
+        <h2>Account History</h2>
+        <br>
+        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="pending_betslips">Pending Betslips</button>
+        <div class="ui message" style="background-color: #1f2833; display: none">
+            {% for betslip in pending_betslips %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
@@ -229,9 +231,13 @@
           </div>
         </div>
         {% endfor %}
+        </div>
+        <br>
         <hr>
-        <h3>Wins</h3>
-        {% for betslip in winning_tickets %}
+        <br>
+        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="winning_betslips">Winning Betslips</button>
+        <div class="ui message" style="background-color: #1f2833; display: none">
+            {% for betslip in winning_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
             <div class="header">{{ betslip.event }}</div>
@@ -356,9 +362,12 @@
           </div>
         </div>
         {% endfor %}
+        </div>
         <br>
         <hr>
-        <h3>Losses</h3>
+        <br>
+        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="losing_betslips">Losing Betslips</button>
+        <div class="ui message" style="background-color: #1f2833; display: none">
         {% for betslip in losing_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
@@ -470,11 +479,13 @@
           </div>
         </div>
         {% endfor %}
+        </div>
     </div>
+    <br>
     <hr>
     <br>
-    <div style="text-align: center">
-        <h2>Account Adjustments</h2>
+    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="account_adjustments">Account Adjustments</button>
+    <div class="ui message" style="background-color: #1f2833; display: none">
         {% for adjustment in adjustments %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
@@ -508,6 +519,13 @@
         </div>
         {% endfor %}
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <footer style="text-align: center">
+        <h4>PracticeSportsbook.com &copy; 2022</h4>
+    </footer>
 
 </body>
 </html>

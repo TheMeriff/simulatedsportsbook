@@ -74,6 +74,7 @@ def index(request):
         winning_tickets = processed_betslips.filter(winning_ticket=True)
         if winning_tickets and processed_betslips:
             winning_percent = winning_tickets.count() / processed_betslips.count()
+            winning_percent *= 100
         else:
             winning_percent = None
         losing_tickets = processed_betslips.exclude(winning_ticket=True)
@@ -101,7 +102,7 @@ def index(request):
             'processed_betslips': len(processed_betslips) if processed_betslips else None,
             'num_processed_betslips': len(processed_betslips) if processed_betslips else '0',
             'pending_betslips': len(pending_betslips) if pending_betslips else None,
-            'winning_percent': winning_percent * 100 if winning_tickets else 'Not available yet.',
+            'winning_percent': round(winning_percent, 1) if winning_tickets else 'Not available yet.',
             'winning_tickets': len(winning_tickets) if winning_tickets else None,
             'num_winning_tickets': len(winning_tickets) if winning_tickets else '0',
             'losing_tickets': len(losing_tickets) if losing_tickets else None,
