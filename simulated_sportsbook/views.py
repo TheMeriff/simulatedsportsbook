@@ -186,6 +186,7 @@ def account(request):
     winning_tickets = processed_betslips.filter(winning_ticket=True).order_by('-id')
     if winning_tickets and processed_betslips:
         winning_percent = winning_tickets.count() / processed_betslips.count()
+        winning_percent *= 100
     else:
         winning_percent = None
     losing_tickets = processed_betslips.exclude(winning_ticket=True).order_by('-id')
@@ -204,7 +205,7 @@ def account(request):
         'total_betslips': total_betslips,
         'num_processed_betslips': len(processed_betslips) if processed_betslips else 0,
         'num_winning_tickets': len(winning_tickets) if winning_percent else 0,
-        'win_percent': winning_percent * 100 if winning_percent else 'Not Available',
+        'win_percent': round(winning_percent, 1) if winning_percent else 'Not Available',
         'largest_bet': largest_bet,
         'losing_tickets': losing_tickets,
         'winning_tickets': winning_tickets,
