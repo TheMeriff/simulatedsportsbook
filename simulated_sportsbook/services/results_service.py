@@ -78,7 +78,6 @@ class ResultsService:
 
             # Make a request for that weeks boxscores
             if week:
-                week = 3
                 try:
                     boxscores = Boxscores(week=int(week), year=2022)
                     game_results = boxscores.games[f'{week}-{now.year}']
