@@ -2,18 +2,15 @@ import time
 from datetime import datetime, timedelta
 
 import requests
-from sportsreference.nfl.boxscore import Boxscore
+from sportsreference.nfl.boxscore import Boxscore, Boxscores
 from sportsreference.ncaab.boxscore import Boxscore as ncaaboxscore
 from sportsreference.mlb.boxscore import Boxscore as mlbboxscore
-from sportsreference.ncaab.teams import Teams
 from sportsreference.nhl.boxscore import Boxscore as nhlboxscore
 
 from simulated_sportsbook.models import Event
 from simulated_sportsbook.services.discord_service import DiscordService
 from simulated_sportsbook.tests.fixtures.mlb_fixture import mlb_team_abbreviations
 from simulated_sportsbook.tests.fixtures.nba_fixture import nba_team_abbreviations
-from simulated_sportsbook.tests.fixtures.ncaab_fixture import ncaab_team_abbreviations
-from simulated_sportsbook.tests.fixtures.nfl_fixture import nfl_team_abbreviations
 from simulated_sportsbook.tests.fixtures.nhl_fixture import nhl_team_abbreviations
 
 
@@ -23,63 +20,133 @@ class ResultsService:
 
     @staticmethod
     def process_nfl_events():
+        week = None
         updated_events = []
-        nfl_events = Event.objects.filter(sport=Event.NFL).exclude(completed=True)
-        if nfl_events:
-            for event in nfl_events:
-                updated_event = ResultsService.get_nfl_result(event)
-                updated_events.append(updated_event)
-                print(f'Updated {len(updated_events)} NFL events with scores and marked them as complete.')
+        completed_nfl_events = Event.objects.filter(sport=Event.NFL).exclude(completed=True)
+        event_map = {f'{event.away_team} @ {event.home_team}': event for event in completed_nfl_events}
+        nfl_weeks = {
+            # September
+            '9': {
+                '1': range(8, 13),
+                '2': range(14, 20),
+                '3': range(21, 27),
+                '4': range(28, 30),
+            },
+            # October
+            '10': {
+                '4': range(1, 4),
+                '5': range(5, 11),
+                '6': range(12, 18),
+                '7': range(19, 25),
+                '8': range(26, 31),
+            },
+            # November
+            '11': {
+                '8': 1,
+                '9': range(2, 8),
+                '10': range(9, 15),
+                '11': range(16, 22),
+                '12': range(23, 29),
+                '13': 30,
+            },
+            # December
+            '12': {
+                '13': range(1, 6),
+                '14': range(7, 13),
+                '15': range(14, 20),
+                '16': range(21, 27),
+                '17': range(28, 31),
+            },
+            # January
+            '1': {
+                '17': range(1, 3),
+                '18': range(4, 11),
+            },
+        }
+
+        # Only run logic if we have events to process
+        if completed_nfl_events:
+            # Get the current datetime
+            now = datetime.utcnow()
+            # Narrow down the weeks to check by month
+            weeks_to_check = nfl_weeks[str(now.month)]
+            # Find the correct nfl week
+            for week, days in weeks_to_check.items():
+                if now.day in days:
+                    print(f'Today: {now.month}/{now.day}/{now.year} is in the {week} of the nfl season')
+                    break
+
+            # Make a request for that weeks boxscores
+            if week:
+                week = 3
+                try:
+                    boxscores = Boxscores(week=int(week), year=2022)
+                    game_results = boxscores.games[f'{week}-{now.year}']
+                    result_map = {f'{game["away_name"]} @ {game["home_name"]}': game for game in game_results}
+                    for matchup, data in result_map.items():
+                        event = event_map.get(matchup, None)
+                        if event and data['home_score'] or data['away_score']:
+                            event.away_team_points_scored = data['away_score']
+                            event.home_team_points_scored = data['home_score']
+                            event.completed = True
+                            updated_events.append(event)
+                            print(f'{event} was successfully updated with a score.')
+                except Exception as e:
+                    print(e)
+
+        if updated_events:
+            Event.objects.bulk_update(updated_events, fields=('home_team_points_scored', 'away_team_points_scored', 'completed'))
+            print(f'Updated {len(updated_events)} NFL events')
         else:
             print('No NFL events to update')
 
-    @staticmethod
-    def get_nfl_result(event):
-        team_abbreviation = nfl_team_abbreviations[event.home_team]
-        if event.start_time.day < 10:
-            day = f'0{event.start_time.day}'
-        else:
-            day = event.start_time.day
-
-        if event.start_time.month < 10:
-            month = f'0{event.start_time.month}'
-        else:
-            month = event.start_time.month
-
-        url = f'{event.start_time.year}{month}{day}0{team_abbreviation.lower()}'
-        boxscore = Boxscore(url)
-        # Check both in the event of one team getting shutout
-        if boxscore.home_points or boxscore.away_points:
-            event.away_team_points_scored = boxscore.away_points
-            event.home_team_points_scored = boxscore.home_points
-            event.last_updated = datetime.utcnow()
-            event.completed = True
-            event.save()
-            print(f'{event} was successfully updated with a score.')
-            if event.away_team_points_scored > event.home_team_points_scored:
-                winning_team = event.away_team
-                higher_num = event.away_team_points_scored
-                lower_num = event.home_team_points_scored
-            elif event.home_team_points_scored > event.away_team_points_scored:
-                winning_team = event.home_team
-                higher_num = event.home_team_points_scored
-                lower_num = event.away_team_points_scored
-            else:
-                winning_team = 'Shit broke got a problem yo.'
-                higher_num = 'Shit broke got a problem yo.'
-                lower_num = 'Shit broke got a problem yo.'
-            score_data = f"{event.away_team} at {event.home_team}"
-            DiscordService().post_score(score_data, '918755041794478110')
-            time.sleep(1)
-            score_data_2 = f"Winner: {winning_team}"
-            DiscordService().post_score(score_data_2, '918755041794478110')
-            time.sleep(1)
-            score_data_3 = f"{higher_num}-{lower_num}"
-            DiscordService().post_score(score_data_3, '918755041794478110')
-            time.sleep(1)
-            score_data_4 = '--------------------------------------'
-            DiscordService().post_score(score_data_4, '918755041794478110')
-        return event
+    # @staticmethod
+    # def get_nfl_result(event):
+    #     team_abbreviation = nfl_team_abbreviations[event.home_team]
+    #     if event.start_time.day < 10:
+    #         day = f'0{event.start_time.day}'
+    #     else:
+    #         day = event.start_time.day
+    #
+    #     if event.start_time.month < 10:
+    #         month = f'0{event.start_time.month}'
+    #     else:
+    #         month = event.start_time.month
+    #
+    #     url = f'{event.start_time.year}{month}{day}0{team_abbreviation.lower()}'
+    #     boxscore = Boxscore(url)
+    #     # Check both in the event of one team getting shutout
+    #     if boxscore.home_points or boxscore.away_points:
+    #         event.away_team_points_scored = boxscore.away_points
+    #         event.home_team_points_scored = boxscore.home_points
+    #         event.last_updated = datetime.utcnow()
+    #         event.completed = True
+    #         event.save()
+    #         print(f'{event} was successfully updated with a score.')
+    #         if event.away_team_points_scored > event.home_team_points_scored:
+    #             winning_team = event.away_team
+    #             higher_num = event.away_team_points_scored
+    #             lower_num = event.home_team_points_scored
+    #         elif event.home_team_points_scored > event.away_team_points_scored:
+    #             winning_team = event.home_team
+    #             higher_num = event.home_team_points_scored
+    #             lower_num = event.away_team_points_scored
+    #         else:
+    #             winning_team = 'Shit broke got a problem yo.'
+    #             higher_num = 'Shit broke got a problem yo.'
+    #             lower_num = 'Shit broke got a problem yo.'
+    #         score_data = f"{event.away_team} at {event.home_team}"
+    #         DiscordService().post_score(score_data, '918755041794478110')
+    #         time.sleep(1)
+    #         score_data_2 = f"Winner: {winning_team}"
+    #         DiscordService().post_score(score_data_2, '918755041794478110')
+    #         time.sleep(1)
+    #         score_data_3 = f"{higher_num}-{lower_num}"
+    #         DiscordService().post_score(score_data_3, '918755041794478110')
+    #         time.sleep(1)
+    #         score_data_4 = '--------------------------------------'
+    #         DiscordService().post_score(score_data_4, '918755041794478110')
+    #     return event
 
     @staticmethod
     def process_nba_events():
