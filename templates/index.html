@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
     <title style="color: #50c878">Practice Sportsbook</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-83ERWGQM8X"></script>
     <script>
@@ -21,7 +21,7 @@
         img {
             border-radius: 50%;
         }
-        .collapse {
+        .garbage-green {
             background-color: #50c878;
             color: black;
             cursor: pointer;
@@ -32,7 +32,7 @@
             outline: none;
             font-size: 15px;
     }
-        .collapse-content {
+        .garbage-white {
             color: #b3b3b3;
             padding: 0 18px;
             display: none;
@@ -45,28 +45,25 @@
 <div style="text-align: center">
     <img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto">
     <nav>
-        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Menu</button>
-        <div class="collapse-content" style="text-align: center">
-            <div class="collapse" style="text-align: center">
-                <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/">Place a Wager</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/about_us">About Us</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/logout">Logout</a></h5>
-            </div>
+        <button type="button" class="collapse garbage-green" data-bs-toggle="collapse" data-bs-target="#outer-container" aria-expanded="false" aria-controls="#outer-container" style="font-weight: bold; display: block; text-align: center" id="nfl_events">Menu</button>
+        <div class="collapse garbage-green" style="text-align: center">
+            <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
+            <hr>
+            <h5><a style="color: black" href="/">Place a Wager</a></h5>
+            <hr>
+            <h5><a style="color: black" href="/about_us">About Us</a></h5>
+            <hr>
+            <h5><a style="color: black" href="/logout">Logout</a></h5>
         </div>
     </nav>
     <br>
     <br>
-    <div style="color: #50c878;">
+    <div>
         {% if messages %}
             {% for message in messages %}
-                <h2>------------------</h2>
-                <h3>{{ message }}</h3>
-                <h2>------------------</h2>
-                <br>
+                <div class="alert alert-success" role="alert">
+                    <strong>{{ message }}</strong>
+                </div>
             {% endfor %}
         {% endif %}
     </div>
@@ -104,16 +101,56 @@
     {% if mlb_events %}
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">MLB Games</button>
-        <div class="collapse-content" style="text-align: center">
-        <br>
+    <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center" id="nfl_events">MLB Games</button>
+        <div class="collapse" style="margin: 1rem">
             {% for event in mlb_events %}
-            <div class="ui message" style="background-color: #1f2833">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
-                    <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-                    <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-                    <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+                <br>
+                <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+                <div class="collapse" id="inner-container" style="text-align: center; color: #C5C6C7">
+                <div class="card text-bg-secondary mb-3" style="background-color: #333333 ">
+                     <br>
+                    <h4>Game Odds imported from {{ event.external_sportsbook }}</h4>
+                    <br>
+                    <div class="card-body">
+                     <table class="table table-dark" style="text-align: center; table-layout: fixed">
+                      <thead>
+                          <tr>
+                              <th>Team</th>
+                              <th>Spread</th>
+                              <th>Money Line</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="Team">{{ event.away_team }}</td>
+                          <td data-label="Spread">{{ event.spread_away_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.away_team_money_line_price }}</td>
+
+                      </tr>
+                      <tr>
+                          <td data-label="Team">{{ event.home_team }}</td>
+                          <td data-label="Spread">{{ event.spread_home_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.home_team_money_line_price }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    <table class="table table-dark" style="text-align: center">
+                        <thead>
+                        <tr>
+                            <th>Total Points</th>
+                            <th>Over Price</th>
+                            <th>Under Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="OverUnderPoints">{{ event.over_under_points }}</td>
+                          <td data-label="OverPrice">{{ event.over_price }}</td>
+                          <td data-label="UnderPrice">{{ event.under_price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="checkbox">
                         <form method="post" enctype="multipart/form-data" class="ui form error" autocomplete="off" id="{{ event.external_id }}">
                             {% csrf_token %}
@@ -145,32 +182,72 @@
                             <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
                         </form>
                     </div>
+                    </div>
+
                 </div>
             </div>
         {% endfor %}
         <br>
         </div>
-        <br>
     {% endif %}
     {% if nba_events %}
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
-        <div class="collapse-content" style="text-align: center">
-        <br>
+    <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center" id="nba_events">NBA Games</button>
+        <div class="collapse" style="margin: 1rem">
             {% for event in nba_events %}
-            <div class="ui message" style="background-color: #1f2833">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
-                    <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-                    <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-                    <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+                <br>
+                <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+                <div class="collapse" id="inner-container" style="text-align: center; color: #C5C6C7">
+                <div class="card text-bg-secondary mb-3" style="background-color: #333333 ">
+                     <br>
+                    <h4>Game Odds imported from {{ event.external_sportsbook }}</h4>
+                    <br>
+                    <div class="card-body">
+                     <table class="table table-dark" style="text-align: center; table-layout: fixed">
+                      <thead>
+                          <tr>
+                              <th>Team</th>
+                              <th>Spread</th>
+                              <th>Money Line</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="Team">{{ event.away_team }}</td>
+                          <td data-label="Spread">{{ event.spread_away_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.away_team_money_line_price }}</td>
+
+                      </tr>
+                      <tr>
+                          <td data-label="Team">{{ event.home_team }}</td>
+                          <td data-label="Spread">{{ event.spread_home_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.home_team_money_line_price }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    <table class="table table-dark" style="text-align: center">
+                        <thead>
+                        <tr>
+                            <th>Total Points</th>
+                            <th>Over Price</th>
+                            <th>Under Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="OverUnderPoints">{{ event.over_under_points }}</td>
+                          <td data-label="OverPrice">{{ event.over_price }}</td>
+                          <td data-label="UnderPrice">{{ event.under_price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="checkbox">
                         <form method="post" enctype="multipart/form-data" class="ui form error" autocomplete="off" id="{{ event.external_id }}">
                             {% csrf_token %}
                             <hr>
                             <h4>Select the type of bet you would like to place.</h4>
-
                             <label for="{{ event.external_id }}">Type of Bet</label>
                             <br>
                             <select id="{{ event.external_id }}" name="{{ event.external_id }}" style="width: 50%; text-align: center; margin: 0 auto">
@@ -179,7 +256,6 @@
                                 <option value="spread">Spread</option>
                                 <option value="over_under">Over Under</option>
                             </select>
-
                             <br>
                             <label for="{{ event.external_id }} | predicted_outcome">Select a winner</label>
                             <select id="{{ event.external_id }} | predicted_outcome" name="{{ event.external_id }} | predicted_outcome" style="width: 50%; text-align: center; margin: 0 auto">
@@ -196,28 +272,68 @@
                             <br>
                             <br>
                             <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
-                            <br>
                         </form>
                     </div>
+                    </div>
+
                 </div>
             </div>
         {% endfor %}
         </div>
-    <br>
     {% endif %}
     {% if nfl_events %}
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
-        <div class="collapse-content" style="text-align: center">
+    <button type="button" class="collapse garbage-green" data-bs-toggle="collapse" data-bs-target="#outer-container" aria-expanded="false" aria-controls="#outer-container" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
+        <div class="collapse" id="outer-container" style="margin: 1rem">
             {% for event in nfl_events %}
             <br>
-            <div class="ui message" style="background-color: #1f2833">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
-                    <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-                    <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-                    <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+            <button type="button" class="collapse garbage-green" data-bs-toggle="collapse" data-bs-target="#inner-container" aria-expanded="false" aria-controls="#inner-container" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+            <div class="collapse" id="inner-container" style="text-align: center; color: #C5C6C7">
+                <div class="card text-bg-secondary mb-3" style="background-color: #333333 ">
+                     <br>
+                    <h4>Game Odds imported from {{ event.external_sportsbook }}</h4>
+                    <br>
+                    <div class="card-body">
+                     <table class="table table-dark" style="text-align: center; table-layout: fixed">
+                      <thead>
+                          <tr>
+                              <th>Team</th>
+                              <th>Spread</th>
+                              <th>Money Line</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="Team">{{ event.away_team }}</td>
+                          <td data-label="Spread">{{ event.spread_away_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.away_team_money_line_price }}</td>
+
+                      </tr>
+                      <tr>
+                          <td data-label="Team">{{ event.home_team }}</td>
+                          <td data-label="Spread">{{ event.spread_home_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.home_team_money_line_price }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    <table class="table table-dark" style="text-align: center">
+                        <thead>
+                        <tr>
+                            <th>Total Points</th>
+                            <th>Over Price</th>
+                            <th>Under Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="OverUnderPoints">{{ event.over_under_points }}</td>
+                          <td data-label="OverPrice">{{ event.over_price }}</td>
+                          <td data-label="UnderPrice">{{ event.under_price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="checkbox">
                         <form method="post" enctype="multipart/form-data" class="ui form error" autocomplete="off" id="{{ event.external_id }}">
                             {% csrf_token %}
@@ -249,6 +365,8 @@
                             <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
                         </form>
                     </div>
+                    </div>
+
                 </div>
             </div>
         {% endfor %}
@@ -258,16 +376,56 @@
     {% if nhl_events %}
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nhl_events">NHL Games</button>
-        <div class="collapse-content" style="text-align: center">
-        <br>
+    <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center" id="nhl_events">NHL Games</button>
+        <div class="collapse" style="margin: 1rem">
             {% for event in nhl_events %}
-            <div class="ui message" style="background-color: #1f2833">
-                <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
-                <div class="collapse-content" style="text-align: center; color: #C5C6C7">
-                    <p>Home Team --> {{ event.home_team }} | Spread: {{ event.spread_home_team_points }} / {{ event.spread_home_team_price }} | Money Line: {{ event.home_team_money_line_price }}</p>
-                    <p>Away Team --> {{ event.away_team }} | Spread: {{ event.spread_away_team_points }} / {{ event.spread_away_team_price }} | Money Line: {{ event.away_team_money_line_price }}</p>
-                    <p>Over Under --> {{ event.over_under_points }} | Over Price: {{ event.over_price }} | Under Price: {{ event.under_price }}</p>
+                <br>
+                <button type="button" class="collapse garbage-green" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
+                <div class="collapse" id="inner-container" style="text-align: center; color: #C5C6C7">
+                    <div class="card text-bg-secondary mb-3" style="background-color: #333333 ">
+                     <br>
+                    <h4>Game Odds imported from {{ event.external_sportsbook }}</h4>
+                    <br>
+                    <div class="card-body">
+                     <table class="table table-dark" style="text-align: center; table-layout: fixed">
+                      <thead>
+                          <tr>
+                              <th>Team</th>
+                              <th>Spread</th>
+                              <th>Money Line</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="Team">{{ event.away_team }}</td>
+                          <td data-label="Spread">{{ event.spread_away_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.away_team_money_line_price }}</td>
+
+                      </tr>
+                      <tr>
+                          <td data-label="Team">{{ event.home_team }}</td>
+                          <td data-label="Spread">{{ event.spread_home_team_points }}</td>
+                          <td data-label="MoneyLine">{{ event.home_team_money_line_price }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+
+                    <table class="table table-dark" style="text-align: center">
+                        <thead>
+                        <tr>
+                            <th>Total Points</th>
+                            <th>Over Price</th>
+                            <th>Under Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr>
+                          <td data-label="OverUnderPoints">{{ event.over_under_points }}</td>
+                          <td data-label="OverPrice">{{ event.over_price }}</td>
+                          <td data-label="UnderPrice">{{ event.under_price }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
                     <div class="checkbox">
                         <form method="post" enctype="multipart/form-data" class="ui form error" autocomplete="off" id="{{ event.external_id }}">
                             {% csrf_token %}
@@ -299,8 +457,9 @@
                             <button type="submit" id="submit_form" class="ui green basic button">Submit</button>
                         </form>
                     </div>
+                    </div>
                 </div>
-            </div>
+                </div>
             {% endfor %}
         <br>
         </div>
