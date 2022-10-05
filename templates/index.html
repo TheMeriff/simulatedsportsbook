@@ -211,6 +211,7 @@
     <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="nfl_events">NFL Games</button>
         <div class="collapse-content" style="text-align: center">
             {% for event in nfl_events %}
+            <br>
             <div class="ui message" style="background-color: #1f2833">
                 <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center; background-color: #C5C6C7" id="{{ event.external_id }}">{{ event }}</button>
                 <div class="collapse-content" style="text-align: center; color: #C5C6C7">
@@ -304,6 +305,7 @@
         <br>
         </div>
     <br>
+    <hr>
     {% endif %}
     {% if ncaab_events %}
     <hr>
@@ -450,11 +452,10 @@
     </div>
     <br>
     <br>
-    <br>
-    <br>
     <footer style="text-align: center">
         <h4>PracticeSportsbook.com &copy; 2022</h4>
     </footer>
+    <br>
 </body>
 <script>
 {# show/hide warehouse nested rows #}

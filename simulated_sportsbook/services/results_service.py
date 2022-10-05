@@ -34,46 +34,49 @@ class ResultsService:
             },
             # October
             '10': {
-                '4': range(1, 4),
-                '5': range(5, 11),
-                '6': range(12, 18),
-                '7': range(19, 25),
-                '8': range(26, 31),
+                '4': range(1, 5),
+                '5': range(5, 12),
+                '6': range(12, 19),
+                '7': range(19, 26),
+                '8': range(26, 32),
             },
             # November
             '11': {
                 '8': 1,
-                '9': range(2, 8),
-                '10': range(9, 15),
-                '11': range(16, 22),
-                '12': range(23, 29),
+                '9': range(2, 9),
+                '10': range(9, 16),
+                '11': range(16, 23),
+                '12': range(23, 30),
                 '13': 30,
             },
             # December
             '12': {
-                '13': range(1, 6),
-                '14': range(7, 13),
-                '15': range(14, 20),
-                '16': range(21, 27),
+                '13': range(1, 7),
+                '14': range(7, 14),
+                '15': range(14, 21),
+                '16': range(21, 28),
                 '17': range(28, 31),
             },
             # January
             '1': {
-                '17': range(1, 3),
-                '18': range(4, 11),
+                '17': range(1, 4),
+                '18': range(4, 12),
             },
         }
 
         # Only run logic if we have events to process
         if completed_nfl_events:
             # Get the current datetime
-            now = datetime.utcnow()
+            utc_now = datetime.utcnow()
+            offset = timedelta(hours=6)
+            now = utc_now - offset
             # Narrow down the weeks to check by month
             weeks_to_check = nfl_weeks[str(now.month)]
             # Find the correct nfl week
             for week, days in weeks_to_check.items():
+                print(f'Days in this NFL week {[day for day in days]}')
                 if now.day in days:
-                    print(f'Today: {now.month}/{now.day}/{now.year} is in the {week} of the nfl season')
+                    print(f'Today: {now.month}/{now.day}/{now.year} is week {week} of the nfl season')
                     break
 
             # Make a request for that weeks boxscores
@@ -84,7 +87,7 @@ class ResultsService:
                     result_map = {f'{game["away_name"]} @ {game["home_name"]}': game for game in game_results}
                     for matchup, data in result_map.items():
                         event = event_map.get(matchup, None)
-                        if event and data['home_score'] or data['away_score']:
+                        if event and all([data.get('home_score', None), data.get('away_score', None)]):
                             event.away_team_points_scored = data['away_score']
                             event.home_team_points_scored = data['home_score']
                             event.completed = True
