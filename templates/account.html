@@ -3,11 +3,12 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="UTF-8">
-    <title>Account Information</title>
+    <title style="color: #50c878">Practice Sportsbook</title>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.css">
     <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
-    <script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.8.8/dist/semantic.min.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-83ERWGQM8X"></script>
     <script>
@@ -21,7 +22,7 @@
         img {
             border-radius: 50%;
         }
-        .collapse {
+        .garbage-green {
             background-color: #50c878;
             color: black;
             cursor: pointer;
@@ -32,7 +33,7 @@
             outline: none;
             font-size: 15px;
     }
-        .collapse-content {
+        .garbage-white {
             color: #b3b3b3;
             padding: 0 18px;
             display: none;
@@ -42,23 +43,33 @@
     </style>
 </head>
 <body style="background-color: #202124; color: white">
-<div style="text-align: center">
+<div style="text-align: center; justify-content: center; align-content: center">
     <a href="/" style="align-content: center; margin: 0 auto"><img src="{% static 'logo1.jpg' %}" alt="logo1" width="350px" height="auto"></a>
-</div>
-    <nav>
-        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="menu">Menu</button>
-        <div class="collapse-content" style="text-align: center">
-            <div class="collapse" style="text-align: center">
-                <h5><a style="color: black" href="/account">Account/Betslip stats</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/">Place a Wager</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/about_us">About Us</a></h5>
-                <hr>
-                <h5><a style="color: black" href="/logout">Logout</a></h5>
+    <nav class="navbar navbar-expand-md garbage-green justify-content-center" style="font-weight: bold; display: block; text-align: center">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">PracticeSportsbook</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="garbage-green navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Wager</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/account">Account/Stats</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about_us">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
+</div>
     <br>
     <h2 style="text-align: center">Account Info</h2>
     <br>
@@ -94,32 +105,32 @@
     <div style="text-align: center">
         <hr>
         <h2>Reset Account Balance</h2>
-        <div style="color: red;">
-            {% if messages %}
-                {% for message in messages %}
-                    <h2>------------------</h2>
-                    <h3>{{ message }}</h3>
-                    <h2>------------------</h2>
-                {% endfor %}
-            {% endif %}
-        </div>
+        <div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success" role="alert">
+                    <strong>{{ message }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
         <h4>If you are out of money or close to it feel free to reset to the starting balance of 1000.</h4>
         <form style="text-align: center" method="post" enctype="multipart/form-data" id="account_reset" name="account_reset">
             {% csrf_token %}
             <div class="ui checked checkbox">
-            <input type="checkbox" value="account_reset_true" name="account_reset_true" id="account_reset_true">
-            <label style="color: red">Reset Account Balance.</label>
-            <br>
-            <button type="submit" id="account_reset" class="ui red basic button">Confirm Account Reset</button>
-        </div>
+                <input type="checkbox" value="account_reset_true" name="account_reset_true" id="account_reset_true">
+                <label style="color: red">Reset Account Balance.</label>
+                <br>
+                <button type="submit" id="account_reset" class="ui red basic button">Confirm Account Reset</button>
+            </div>
         </form>
         <br>
         <br>
         <hr>
         <h2>Account History</h2>
         <br>
-        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="pending_betslips">Pending Betslips</button>
-        <div class="ui message" style="background-color: #1f2833; display: none">
+        <button type="button" class="garbage-green" style="font-weight: bold; display: block; text-align: center" id="pending_betslips">Pending Betslips</button>
+        <div class="ui message garbage-green" style="background-color: #1f2833; display: none">
             {% for betslip in pending_betslips %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
           <div class="content">
@@ -235,7 +246,7 @@
         <br>
         <hr>
         <br>
-        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="winning_betslips">Winning Betslips</button>
+        <button type="button" class="garbage-green" style="font-weight: bold; display: block; text-align: center" id="winning_betslips">Winning Betslips</button>
         <div class="ui message" style="background-color: #1f2833; display: none">
             {% for betslip in winning_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
@@ -366,7 +377,7 @@
         <br>
         <hr>
         <br>
-        <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="losing_betslips">Losing Betslips</button>
+        <button type="button" class="garbage-green" style="font-weight: bold; display: block; text-align: center" id="losing_betslips">Losing Betslips</button>
         <div class="ui message" style="background-color: #1f2833; display: none">
         {% for betslip in losing_tickets %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
@@ -484,7 +495,7 @@
     <br>
     <hr>
     <br>
-    <button type="button" class="collapse" style="font-weight: bold; display: block; text-align: center" id="account_adjustments">Account Adjustments</button>
+    <button type="button" class="garbage-green" style="font-weight: bold; display: block; text-align: center" id="account_adjustments">Account Adjustments</button>
     <div class="ui message" style="background-color: #1f2833; display: none">
         {% for adjustment in adjustments %}
         <div class="ui card" style="display: inline-flex; text-align: center; margin: 1rem; background-color: #C5C6C7">
@@ -531,7 +542,7 @@
 </html>
 <script>
 {# show/hide warehouse nested rows #}
-    let coll = document.getElementsByClassName("collapse");
+    let coll = document.getElementsByClassName("garbage-green");
     for (let i = 0; i < coll.length; i++) {
         coll[i].addEventListener("click", function () {
             console.log(this)
@@ -545,3 +556,4 @@
         });
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
