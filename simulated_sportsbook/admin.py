@@ -6,10 +6,11 @@ from users.models import Account, AccountAdjustments
 
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
-    fields = ['external_id', 'sport', 'home_team', 'away_team', 'start_time', 'last_updated', 'spread_away_team_points',
-              'spread_away_team_price', 'spread_home_team_points', 'spread_home_team_price', 'over_under_points',
+    fields = ['completed', 'external_id', 'sport', 'home_team', 'home_team_points_scored', 'away_team', 'away_team_points_scored',
+              'start_time', 'last_updated', 'spread_away_team_points', 'spread_away_team_price',
+              'spread_home_team_points', 'spread_home_team_price', 'over_under_points',
               'over_price', 'under_price', 'away_team_money_line_price', 'home_team_money_line_price',
-              'external_sportsbook', 'away_team_points_scored', 'home_team_points_scored', 'completed'
+              'external_sportsbook'
               ]
     list_display = [
         'id', 'external_id', 'sport', 'home_team', 'away_team', 'start_time', 'over_under_points', 'spread_away_team_points',
@@ -26,10 +27,10 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Betslip)
 class BetslipAdmin(admin.ModelAdmin):
-    fields = ['user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
-              'winning_ticket', 'processed_ticket']
+    fields = ['processed_ticket', 'user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return',
+              'profit', 'winning_ticket']
     readonly_fields = ['user_account', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
-              'winning_ticket', 'processed_ticket', 'type_of_bet']
+                       'winning_ticket', 'processed_ticket', 'type_of_bet']
     list_display = ['id', 'user_account', 'type_of_bet', 'predicted_outcome', 'event', 'stake', 'total_return', 'profit',
                     'winning_ticket', 'processed_ticket']
     list_filter = ['type_of_bet', 'winning_ticket', 'processed_ticket']
