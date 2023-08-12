@@ -132,25 +132,25 @@ def refresh_odds(request):
             nhl_refresh = request.POST.get('nhl_refresh')
             ncaa_basketball_refresh = request.POST.get('ncaa_basketball_refresh')
             process_betslips = request.POST.get('process_betslips')
-            if nba_refresh == 'on':
-                # Pull in new odds
-                nba_events = OpenApiService().get_nba_odds()
-                # Update existing NBA events with scores
-                ResultsService.process_nba_events()
-            if nfl_refresh == 'on':
-                nfl_events = OpenApiService().get_nfl_odds()
-                ResultsService.process_nfl_events()
-            if mma_refresh == 'on':
-                mma_events = OpenApiService().get_mma_odds()
+            # if nba_refresh == 'on':
+            #     # Pull in new odds
+            #     nba_events = OpenApiService().get_nba_odds()
+            #     # Update existing NBA events with scores
+            #     ResultsService().process_nba_events()
+            # if nfl_refresh == 'on':
+            #     nfl_events = OpenApiService().get_nfl_odds()
+            #     ResultsService().process_nfl_events()
+            # if mma_refresh == 'on':
+            #     mma_events = OpenApiService().get_mma_odds()
             if mlb_refresh == 'on':
-                mlb_events = OpenApiService().get_mlb_odds()
-                ResultsService.process_mlb_events()
-            if nhl_refresh == 'on':
-                nhl_events = OpenApiService().get_nhl_odds()
-                ResultsService.process_nhl_events()
-            if ncaa_basketball_refresh == 'on':
-                ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
-                ResultsService.process_ncaab_events()
+                # mlb_events = OpenApiService().get_mlb_odds()
+                ResultsService().process_mlb_events()
+            # if nhl_refresh == 'on':
+            #     nhl_events = OpenApiService().get_nhl_odds()
+            #     ResultsService.process_nhl_events()
+            # if ncaa_basketball_refresh == 'on':
+            #     ncaa_basketball_events = OpenApiService().get_ncaa_basketball_odds()
+            #     ResultsService.process_ncaab_events()
             if process_betslips == 'on':
                 betslips = Betslip.objects.all().exclude(processed_ticket=True)
                 for betslip in betslips:
