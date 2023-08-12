@@ -145,7 +145,6 @@ class OpenApiService:
         external_event_id = event['id']
         start_time = event['commence_time']
         start_time_obj = parser.parse(start_time)
-        cdt = start_time_obj - timedelta(hours=5)
         home_team = event['home_team']
         away_team = event['away_team']
         bookmakers = event['bookmakers']
@@ -211,7 +210,7 @@ class OpenApiService:
                 sport=sport,
                 home_team=home_team,
                 away_team=away_team,
-                start_time=cdt,
+                start_time=start_time_obj,
                 over_price=over_price,
                 under_price=under_price,
                 over_under_points=over_under_points,
